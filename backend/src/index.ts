@@ -14,10 +14,10 @@ import quoteRoutes from "./routes/quotes";
 
 const app = express();
 const PORT = process.env.PORT ?? 3001;
-const CLIENT_ORIGIN = process.env.CLIENT_ORIGIN ?? "http://localhost:5173";
+const CLIENT_ORIGINS = (process.env.CLIENT_ORIGIN ?? "http://localhost:5173,https://vyoma-wellness-hub.vercel.app").split(",");
 
 const corsOptions = {
-  origin: CLIENT_ORIGIN,
+  origin: CLIENT_ORIGINS,
   credentials: true,
   optionsSuccessStatus: 200,
 };
@@ -25,6 +25,10 @@ const corsOptions = {
 app.use(cors(corsOptions));
 app.options("*", cors(corsOptions));
 app.use(express.json());
+
+app.get("/", (_req, res) => {
+  res.json({ success: true, message: "Vyoma API running" });
+});
 
 app.get("/health", (_req, res) => {
   res.json({ status: "ok", timestamp: new Date().toISOString() });
