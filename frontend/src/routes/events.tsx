@@ -150,7 +150,7 @@ function EventsPage() {
       <div className="mt-16 flex flex-wrap items-center justify-between gap-4 rounded-xl border border-border bg-secondary/50 p-6">
         <p className="text-sm text-muted-foreground">New to Vyoma? Start with a free week and find your rhythm.</p>
         <Button asChild className="bg-primary text-primary-foreground hover:bg-primary/90">
-          <Link to="/signup">Start free week</Link>
+          <Link to="/signup">Get started</Link>
         </Button>
       </div>
 

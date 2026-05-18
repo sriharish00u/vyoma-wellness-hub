@@ -49,9 +49,16 @@ export function Header() {
         <div className="hidden items-center gap-2 md:flex">
           {loggedIn ? (
             <>
+              {isAdmin && (
+                <Button asChild variant="ghost" size="sm">
+                  <Link to="/admin" className="gap-1.5">
+                    <ShieldCheck className="h-3.5 w-3.5 text-orange" />
+                    Admin
+                  </Link>
+                </Button>
+              )}
               <span className="flex items-center gap-1.5 text-sm font-medium text-foreground">
                 {user?.name}
-                {isAdmin && <ShieldCheck className="h-3.5 w-3.5 text-orange" />}
                 {user?.isVerified && <BadgeCheck className="h-3.5 w-3.5 text-emerald" />}
               </span>
               <Button variant="ghost" size="sm" onClick={handleSignOut} className="gap-1.5">
@@ -65,7 +72,7 @@ export function Header() {
                 <Link to="/login">Login</Link>
               </Button>
               <Button asChild size="sm" className="bg-primary text-primary-foreground hover:bg-primary/90">
-                <Link to="/signup">Start free</Link>
+                <Link to="/signup">Get started</Link>
               </Button>
             </>
           )}
@@ -98,9 +105,14 @@ export function Header() {
               <div className="mt-2 flex flex-col gap-2 px-1">
                 {loggedIn ? (
                   <>
+                    {isAdmin && (
+                      <Link to="/admin" onClick={() => setOpen(false)} className="flex items-center gap-1.5 rounded-md px-3 py-2 text-sm font-medium text-orange hover:bg-secondary">
+                        <ShieldCheck className="h-3.5 w-3.5" />
+                        Admin
+                      </Link>
+                    )}
                     <div className="flex items-center gap-1.5 px-3 py-2 text-sm text-foreground">
                       {user?.name}
-                      {isAdmin && <ShieldCheck className="h-3.5 w-3.5 text-orange" />}
                       {user?.isVerified && <BadgeCheck className="h-3.5 w-3.5 text-emerald" />}
                     </div>
                     <Button
@@ -119,7 +131,7 @@ export function Header() {
                       <Link to="/login" onClick={() => setOpen(false)}>Login</Link>
                     </Button>
                     <Button asChild size="sm" className="flex-1 bg-primary text-primary-foreground">
-                      <Link to="/signup" onClick={() => setOpen(false)}>Start free</Link>
+                      <Link to="/signup" onClick={() => setOpen(false)}>Get started</Link>
                     </Button>
                   </div>
                 )}

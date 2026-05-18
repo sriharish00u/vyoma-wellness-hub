@@ -53,20 +53,10 @@ async function createAdmin() {
   await mongoose.connect(uri);
   console.log("✅ Connected to MongoDB\n");
 
-  const name = await prompt("Admin name: ");
-  const email = await prompt("Admin email: ");
-  const password = await prompt("Admin password (min 8 chars): ", true);
+  const email = await prompt("Admin Gmail: ");
 
-  if (!name || name.length < 2) {
-    console.error("❌ Name must be at least 2 characters.");
-    process.exit(1);
-  }
   if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
     console.error("❌ Invalid email address.");
-    process.exit(1);
-  }
-  if (!password || password.length < 8) {
-    console.error("❌ Password must be at least 8 characters.");
     process.exit(1);
   }
 
@@ -80,20 +70,21 @@ async function createAdmin() {
     process.exit(1);
   }
 
-  const hashed = await bcrypt.hash(password, 12);
+  const hashed = await bcrypt.hash("1234", 12);
   const admin = await User.create({
-    name,
+    name: "",
     email: email.toLowerCase(),
     password: hashed,
     role: "admin",
     plan: "annual",
+    needsSetup: true,
   });
 
   console.log(`\n✅ Admin created successfully!`);
-  console.log(`   Name  : ${admin.name}`);
   console.log(`   Email : ${admin.email}`);
   console.log(`   Role  : admin`);
-  console.log(`\n→ Login at /admin/login using these credentials.\n`);
+  console.log(`   Password : 1234 (change on first login)`);
+  console.log(`\n→ Login at /login using these credentials.\n`);
 
   await mongoose.disconnect();
   process.exit(0);

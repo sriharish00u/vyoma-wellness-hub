@@ -30,7 +30,7 @@ export const stats = [
 ];
 
 export const plans = [
-  { name: "Starter", price: "Free", period: "forever", features: ["3 sessions / week", "Library preview", "Community access"], cta: "Start free", highlight: false },
+  { name: "Starter", price: "Free", period: "forever", features: ["3 sessions / week", "Library preview", "Community access"], cta: "Get started", highlight: false },
   { name: "Member", price: "₹499", period: "/ month", features: ["Daily live sessions", "Full program library", "Habit tracker", "Coach Q&A"], cta: "Become a member", highlight: true },
   { name: "Annual", price: "₹3,999", period: "/ year", features: ["Everything in Member", "Two months free", "Priority support", "Member events"], cta: "Go annual", highlight: false },
 ];

@@ -1,4 +1,5 @@
 import { Router } from "express";
+import bcrypt from "bcryptjs";
 import { User } from "../models/User.js";
 import { Contact } from "../models/Contact.js";
 import { Session } from "../models/Session.js";
@@ -10,15 +11,19 @@ const router = Router();
 
 router.get("/stats", async (_req, res, next) => {
   try {
-    const [users, admins, verified, sessions, programs, events] = await Promise.all([
+    const [users, admins, verified, sessions, programs, events, firstUser] = await Promise.all([
       User.countDocuments({ role: "user" }),
       User.countDocuments({ role: "admin" }),
       User.countDocuments({ isVerified: true }),
       Session.countDocuments(),
       Program.countDocuments(),
       Event.countDocuments(),
+      User.findOne({}, { createdAt: 1 }).sort({ createdAt: 1 }),
     ]);
-    res.json({ users, admins, verified, sessions, programs, events });
+    const daysSinceLaunch = firstUser
+      ? Math.max(1, Math.floor((Date.now() - new Date(firstUser.createdAt).getTime()) / (1000 * 60 * 60 * 24)))
+      : 1;
+    res.json({ users, admins, verified, sessions, programs, events, daysSinceLaunch });
   } catch (err) {
     next(err);
   }
@@ -104,6 +109,22 @@ router.delete("/users/:id", verifyToken, requireAdmin, async (req, res, next) =>
       throw err;
     }
     res.json({ success: true });
+  } catch (err) {
+    next(err);
+  }
+});
+
+router.post("/users", verifyToken, requireAdmin, async (req, res, next) => {
+  try {
+    const { name, email, password, role } = req.body;
+    if (!name || name.length < 2) { res.status(400).json({ error: "Name must be at least 2 characters" }); return; }
+    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { res.status(400).json({ error: "Invalid email" }); return; }
+    if (!password || password.length < 8) { res.status(400).json({ error: "Password must be at least 8 characters" }); return; }
+    const existing = await User.findOne({ email: email.toLowerCase() });
+    if (existing) { res.status(409).json({ error: "Email already registered" }); return; }
+    const hashed = await bcrypt.hash(password, 10);
+    const user = await User.create({ name, email: email.toLowerCase(), password: hashed, role: role || "user" });
+    res.status(201).json({ id: user._id, name: user.name, email: user.email, role: user.role, plan: user.plan, isVerified: user.isVerified });
   } catch (err) {
     next(err);
   }

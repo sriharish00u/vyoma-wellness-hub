@@ -67,10 +67,11 @@ function Index() {
     onError: (err: Error) => toast.error(err.message),
   });
 
-  // Hero bento: use real data when logged in, demo values for marketing UI when logged out
-  const streakDisplay = me?.streak ?? 42;
-  const joinedDisplay = me?.sessionsCompleted ?? 0;
   const totalSessionsCount = totalSessions.length;
+  const loggedIn = auth.isLoggedIn();
+
+  const streakDisplay = me?.streak ?? realStats?.daysSinceLaunch ?? 1;
+  const joinedDisplay = me?.sessionsCompleted ?? 0;
 
   const latestEvent = upcomingEvents[0];
   const displayStats = realStats
@@ -108,7 +109,7 @@ function Index() {
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
               <Button asChild size="lg" className="bg-primary text-primary-foreground hover:bg-primary/90">
-                <Link to="/signup">Start your free week <ArrowRight className="ml-1 h-4 w-4" /></Link>
+                <Link to="/signup">Get started <ArrowRight className="ml-1 h-4 w-4" /></Link>
               </Button>
               <Button asChild size="lg" variant="outline">
                 <Link to="/events">Browse events</Link>
@@ -161,14 +162,14 @@ function Index() {
                 )}
               </div>
               <div className="col-span-2 row-span-3 rounded-2xl bg-emerald p-5 text-emerald-foreground hover-lift">
-                <p className="text-xs font-medium uppercase tracking-widest opacity-80">Streak</p>
+                <p className="text-xs font-medium uppercase tracking-widest opacity-80">{loggedIn ? "Streak" : "Since launch"}</p>
                 <p className="mt-3 font-display text-4xl font-bold">{streakDisplay}</p>
-                <p className="text-sm opacity-85">days strong</p>
+                <p className="text-sm opacity-85">{loggedIn ? "days strong" : "days running"}</p>
               </div>
               <Link to="/events" className="col-span-3 row-span-3 rounded-2xl border border-border bg-card p-5 hover-lift block">
-                <p className="text-xs font-medium uppercase tracking-widest text-muted-foreground">Joined</p>
-                <p className="mt-3 font-display text-2xl font-bold text-foreground">{joinedDisplay}{totalSessionsCount > 0 ? ` / ${totalSessionsCount}` : ""}</p>
-                <p className="text-sm text-muted-foreground">sessions joined</p>
+                <p className="text-xs font-medium uppercase tracking-widest text-muted-foreground">{loggedIn ? "Joined" : "Created"}</p>
+                <p className="mt-3 font-display text-2xl font-bold text-foreground">{loggedIn ? joinedDisplay : totalSessionsCount}{totalSessionsCount > 0 ? ` / ${totalSessionsCount}` : ""}</p>
+                <p className="text-sm text-muted-foreground">{loggedIn ? "sessions joined" : "sessions created"}</p>
                 <div className="mt-4 flex gap-1.5">
                   {Array.from({ length: Math.max(totalSessionsCount, 1) }).map((_, i) => (
                     <span
@@ -372,7 +373,7 @@ function Index() {
           <div className="grid items-center gap-8 lg:grid-cols-2">
             <div>
               <h2 className="font-display text-3xl font-bold tracking-tight sm:text-4xl">
-                Start your free week.
+                Get started today.
               </h2>
               <p className="mt-3 max-w-md text-primary-foreground/80">
                 Seven days of live sessions, full library access and a coach in your corner.
@@ -385,7 +386,7 @@ function Index() {
             </ul>
             <div className="lg:col-span-2">
               <Button asChild size="lg" className="bg-orange text-orange-foreground hover:bg-orange/90">
-                <Link to="/signup">Start free <ArrowRight className="ml-1 h-4 w-4" /></Link>
+                <Link to="/signup">Get started <ArrowRight className="ml-1 h-4 w-4" /></Link>
               </Button>
             </div>
           </div>

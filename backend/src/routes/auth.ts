@@ -20,7 +20,7 @@ const authLimiter = rateLimit({
 
 router.post("/register", authLimiter, async (req, res, next) => {
   try {
-    const data = registerSchema.parse(req.body);
+    const { confirmPassword, ...data } = registerSchema.parse(req.body);
     const existing = await User.findOne({ email: data.email });
     if (existing) {
       const err = new Error("Email already registered") as any;
@@ -87,13 +87,44 @@ router.post("/login", authLimiter, async (req, res, next) => {
     const token = jwt.sign({ userId: user._id, role: user.role }, JWT_SECRET, { expiresIn: "7d" });
     res.json({
       token,
-      user: { id: user._id, name: user.name, email: user.email, role: user.role, plan: user.plan, streak: user.streak, sessionsCompleted: user.sessionsCompleted, isVerified: user.isVerified },
+      user: { id: user._id, name: user.name, email: user.email, role: user.role, plan: user.plan, streak: user.streak, sessionsCompleted: user.sessionsCompleted, isVerified: user.isVerified, needsSetup: user.needsSetup },
     });
   } catch (err: any) {
     if (err.name === "ZodError") {
       res.status(400).json({ error: err.errors[0].message });
       return;
     }
+    next(err);
+  }
+});
+
+router.patch("/setup", verifyToken, async (req, res, next) => {
+  try {
+    const { name, password } = req.body;
+    if (!name || name.length < 2) {
+      res.status(400).json({ error: "Name must be at least 2 characters" });
+      return;
+    }
+    if (!password || password.length < 8) {
+      res.status(400).json({ error: "Password must be at least 8 characters" });
+      return;
+    }
+    const user = await User.findById(req.user!.userId);
+    if (!user) {
+      const err = new Error("User not found") as any;
+      err.status = 404;
+      throw err;
+    }
+    user.name = name;
+    user.password = await bcrypt.hash(password, 10);
+    user.needsSetup = false;
+    await user.save();
+    const token = jwt.sign({ userId: user._id, role: user.role }, JWT_SECRET, { expiresIn: "7d" });
+    res.json({
+      token,
+      user: { id: user._id, name: user.name, email: user.email, role: user.role, plan: user.plan, streak: user.streak, sessionsCompleted: user.sessionsCompleted, isVerified: user.isVerified, needsSetup: false },
+    });
+  } catch (err) {
     next(err);
   }
 });
@@ -116,6 +147,7 @@ router.get("/me", verifyToken, async (req, res, next) => {
       streak: user.streak,
       sessionsCompleted: user.sessionsCompleted,
       isVerified: user.isVerified,
+      needsSetup: user.needsSetup,
     });
   } catch (err) {
     next(err);

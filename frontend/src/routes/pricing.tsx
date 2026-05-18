@@ -89,7 +89,7 @@ function PricingPage() {
         <h1 className="mt-3 font-display text-4xl font-bold tracking-tight sm:text-5xl">
           Simple plans, real practice.
         </h1>
-        <p className="mt-4 text-muted-foreground">Start free. Upgrade only when you're ready.</p>
+        <p className="mt-4 text-muted-foreground">Get started. Upgrade only when you're ready.</p>
       </header>
       <div className="mt-14 grid gap-6 lg:grid-cols-3">
         {plans.map((p) => (
@@ -145,7 +145,7 @@ function PricingPage() {
                   </div>
                   <div className="space-y-1">
                     <Label className="text-xs">CTA</Label>
-                    <Input value={p.cta} onChange={(e) => updatePlan(idx, "cta", e.target.value)} placeholder="Start free" />
+                    <Input value={p.cta} onChange={(e) => updatePlan(idx, "cta", e.target.value)} placeholder="Get started" />
                   </div>
                 </div>
                 <div className="grid grid-cols-2 gap-3">

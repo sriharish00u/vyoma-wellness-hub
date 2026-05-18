@@ -35,6 +35,11 @@ export const api = {
         body: JSON.stringify(data),
       }),
     me: () => request<AuthUser>("/auth/me"),
+    setup: (data: { name: string; password: string }) =>
+      request<{ token: string; user: AuthUser }>("/auth/setup", {
+        method: "PATCH",
+        body: JSON.stringify(data),
+      }),
   },
   programs: {
     list: (tag?: string) =>
@@ -67,6 +72,8 @@ export const api = {
       request<{ success: boolean }>(`/admin/users/${id}?confirm=true`, { method: "DELETE" }),
     updatePlan: (id: string, plan: string) =>
       request<AdminUser>(`/admin/users/${id}/plan`, { method: "PATCH", body: JSON.stringify({ plan }) }),
+    create: (data: { name: string; email: string; password: string; role?: string }) =>
+      request<AdminUser>("/admin/users", { method: "POST", body: JSON.stringify(data) }),
   },
   sessions: {
     list: () => request<Session[]>("/sessions"),
@@ -115,6 +122,7 @@ export type AuthUser = {
   streak?: number;
   sessionsCompleted?: number;
   isVerified?: boolean;
+  needsSetup?: boolean;
 };
 
 export type Program = {
@@ -198,6 +206,7 @@ export type Stats = {
   sessions: number;
   programs: number;
   events: number;
+  daysSinceLaunch: number;
 };
 
 export type Quote = {

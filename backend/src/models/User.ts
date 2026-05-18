@@ -12,6 +12,7 @@ const userSchema = new mongoose.Schema(
     lastLoginAt: { type: Date, default: null },
     isVerified: { type: Boolean, default: false },
     isBanned: { type: Boolean, default: false },
+    needsSetup: { type: Boolean, default: false },
   },
   { timestamps: true }
 );

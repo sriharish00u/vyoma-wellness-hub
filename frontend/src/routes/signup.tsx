@@ -12,7 +12,7 @@ import { api } from "@/lib/api";
 import { auth } from "@/lib/auth";
 
 export const Route = createFileRoute("/signup")({
-  head: () => ({ meta: [{ title: "Start free — Vyoma Wellness" }, { name: "description", content: "Create your Vyoma Wellness account." }] }),
+  head: () => ({ meta: [{ title: "Get started — Vyoma Wellness" }, { name: "description", content: "Create your Vyoma Wellness account." }] }),
   component: SignupPage,
 });
 
@@ -20,6 +20,10 @@ const schema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),
   email: z.string().email("Enter a valid email"),
   password: z.string().min(8, "Password must be at least 8 characters"),
+  confirmPassword: z.string().min(8, "Password must be at least 8 characters"),
+}).refine((data) => data.password === data.confirmPassword, {
+  message: "Passwords do not match",
+  path: ["confirmPassword"],
 });
 
 type FormData = z.infer<typeof schema>;
@@ -51,7 +55,7 @@ function SignupPage() {
   return (
     <div className="mx-auto grid max-w-5xl gap-10 px-4 py-20 sm:px-6 lg:grid-cols-2 lg:gap-16">
       <div className="animate-fade-up">
-        <p className="text-xs font-semibold uppercase tracking-widest text-emerald">Start free</p>
+        <p className="text-xs font-semibold uppercase tracking-widest text-emerald">Get started</p>
         <h1 className="mt-3 font-display text-3xl font-bold tracking-tight sm:text-4xl">
           Seven days. Daily practice. No card.
         </h1>
@@ -89,6 +93,13 @@ function SignupPage() {
             <Input id="password" type="password" required placeholder="At least 8 characters" {...register("password")} aria-invalid={!!errors.password} />
             {errors.password && (
               <p className="text-xs text-destructive mt-1">{errors.password.message}</p>
+            )}
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="confirmPassword">Repeat password</Label>
+            <Input id="confirmPassword" type="password" required placeholder="Repeat password" {...register("confirmPassword")} aria-invalid={!!errors.confirmPassword} />
+            {errors.confirmPassword && (
+              <p className="text-xs text-destructive mt-1">{errors.confirmPassword.message}</p>
             )}
           </div>
           <Button type="submit" disabled={isSubmitting} className="w-full bg-primary text-primary-foreground hover:bg-primary/90">

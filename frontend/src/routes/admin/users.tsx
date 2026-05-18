@@ -1,10 +1,13 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { Users, ChevronLeft, ChevronRight, ShieldCheck, Ban, Trash2, BadgeCheck } from "lucide-react";
+import { Users, ChevronLeft, ChevronRight, ShieldCheck, Ban, Trash2, BadgeCheck, Plus } from "lucide-react";
 import { toast } from "sonner";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
 import { api, type AdminUser } from "@/lib/api";
 
@@ -43,6 +46,15 @@ function AdminUsers() {
     onError: (err: Error) => toast.error(err.message),
   });
 
+  const [createOpen, setCreateOpen] = useState(false);
+  const [newUser, setNewUser] = useState({ name: "", email: "", password: "", role: "user" });
+
+  const createMutation = useMutation({
+    mutationFn: () => api.admin.create(newUser),
+    onSuccess: () => { qc.invalidateQueries({ queryKey: ["admin", "users"] }); toast.success("User created"); setCreateOpen(false); setNewUser({ name: "", email: "", password: "", role: "user" }); },
+    onError: (err: Error) => toast.error(err.message),
+  });
+
   const deleteMutation = useMutation({
     mutationFn: (id: string) => api.admin.deleteUser(id),
     onSuccess: () => { qc.invalidateQueries({ queryKey: ["admin", "users"] }); toast.success("User deleted"); setDeleteTarget(null); },
@@ -60,14 +72,19 @@ function AdminUsers() {
 
   return (
     <div className="px-6 py-8">
-      <div className="flex items-center gap-3">
-        <div className="grid h-10 w-10 place-items-center rounded-xl bg-secondary text-primary">
-          <Users className="h-5 w-5" />
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-3">
+          <div className="grid h-10 w-10 place-items-center rounded-xl bg-secondary text-primary">
+            <Users className="h-5 w-5" />
+          </div>
+          <div>
+            <h1 className="font-display text-2xl font-bold text-foreground">Users</h1>
+            {data && <p className="text-sm text-muted-foreground">{data.total} total</p>}
+          </div>
         </div>
-        <div>
-          <h1 className="font-display text-2xl font-bold text-foreground">Users</h1>
-          {data && <p className="text-sm text-muted-foreground">{data.total} total</p>}
-        </div>
+        <Button size="sm" onClick={() => setCreateOpen(true)} className="gap-1.5">
+          <Plus className="h-4 w-4" /> Add user
+        </Button>
       </div>
 
       <div className="mt-8 rounded-xl border border-border bg-card overflow-hidden">
@@ -188,6 +205,41 @@ function AdminUsers() {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
+
+      <Dialog open={createOpen} onOpenChange={(o) => !o && setCreateOpen(false)}>
+        <DialogContent className="max-w-sm">
+          <DialogHeader>
+            <DialogTitle>Create user</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4">
+            <div className="space-y-2">
+              <Label>Name</Label>
+              <Input value={newUser.name} onChange={(e) => setNewUser((p) => ({ ...p, name: e.target.value }))} placeholder="Full name" />
+            </div>
+            <div className="space-y-2">
+              <Label>Email</Label>
+              <Input value={newUser.email} onChange={(e) => setNewUser((p) => ({ ...p, email: e.target.value }))} placeholder="you@example.com" type="email" />
+            </div>
+            <div className="space-y-2">
+              <Label>Password</Label>
+              <Input value={newUser.password} onChange={(e) => setNewUser((p) => ({ ...p, password: e.target.value }))} placeholder="At least 8 characters" type="password" />
+            </div>
+            <div className="space-y-2">
+              <Label>Role</Label>
+              <select value={newUser.role} onChange={(e) => setNewUser((p) => ({ ...p, role: e.target.value }))} className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring">
+                <option value="user">User</option>
+                <option value="admin">Admin</option>
+              </select>
+            </div>
+            <div className="flex justify-end gap-2 pt-2">
+              <Button variant="outline" onClick={() => setCreateOpen(false)}>Cancel</Button>
+              <Button onClick={() => createMutation.mutate()} disabled={createMutation.isPending} className="bg-primary text-primary-foreground">
+                {createMutation.isPending ? "Creating…" : "Create"}
+              </Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
