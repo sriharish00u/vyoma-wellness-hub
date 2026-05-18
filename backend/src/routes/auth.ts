@@ -62,10 +62,32 @@ router.post("/login", authLimiter, async (req, res, next) => {
       err.status = 401;
       throw err;
     }
+
+    const now = new Date();
+    const lastLogin = user.lastLoginAt;
+    let newStreak = user.streak;
+
+    if (!lastLogin) {
+      newStreak = 1;
+    } else {
+      const lastDay = new Date(lastLogin).setHours(0, 0, 0, 0);
+      const today = new Date(now).setHours(0, 0, 0, 0);
+      const diffDays = Math.round((today - lastDay) / (1000 * 60 * 60 * 24));
+      if (diffDays === 1) {
+        newStreak += 1;
+      } else if (diffDays > 1) {
+        newStreak = 1;
+      }
+    }
+
+    user.streak = newStreak;
+    user.lastLoginAt = now;
+    await user.save();
+
     const token = jwt.sign({ userId: user._id, role: user.role }, JWT_SECRET, { expiresIn: "7d" });
     res.json({
       token,
-      user: { id: user._id, name: user.name, email: user.email, role: user.role, plan: user.plan, streak: user.streak, isVerified: user.isVerified },
+      user: { id: user._id, name: user.name, email: user.email, role: user.role, plan: user.plan, streak: user.streak, sessionsCompleted: user.sessionsCompleted, isVerified: user.isVerified },
     });
   } catch (err: any) {
     if (err.name === "ZodError") {

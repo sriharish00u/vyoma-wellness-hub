@@ -7,6 +7,18 @@ const router = Router();
 
 router.get("/", async (req, res, next) => {
   try {
+    const now = new Date();
+
+    await Event.updateMany(
+      { status: "upcoming", scheduledAt: { $lte: now } },
+      { $set: { status: "live" } }
+    );
+
+    await Event.updateMany(
+      { status: "live", scheduledAt: { $lte: new Date(now.getTime() - 60 * 60 * 1000) } },
+      { $set: { status: "completed" } }
+    );
+
     const filter: Record<string, any> = {};
     if (req.query.status) {
       filter.status = req.query.status;

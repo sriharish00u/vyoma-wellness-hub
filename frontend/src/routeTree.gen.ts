@@ -10,9 +10,9 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as SignupRouteImport } from './routes/signup'
-import { Route as ProgramsRouteImport } from './routes/programs'
 import { Route as PricingRouteImport } from './routes/pricing'
 import { Route as LoginRouteImport } from './routes/login'
+import { Route as EventsRouteImport } from './routes/events'
 import { Route as ContactRouteImport } from './routes/contact'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as IndexRouteImport } from './routes/index'
@@ -25,11 +25,6 @@ const SignupRoute = SignupRouteImport.update({
   path: '/signup',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ProgramsRoute = ProgramsRouteImport.update({
-  id: '/programs',
-  path: '/programs',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const PricingRoute = PricingRouteImport.update({
   id: '/pricing',
   path: '/pricing',
@@ -38,6 +33,11 @@ const PricingRoute = PricingRouteImport.update({
 const LoginRoute = LoginRouteImport.update({
   id: '/login',
   path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const EventsRoute = EventsRouteImport.update({
+  id: '/events',
+  path: '/events',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ContactRoute = ContactRouteImport.update({
@@ -75,9 +75,9 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/contact': typeof ContactRoute
+  '/events': typeof EventsRoute
   '/login': typeof LoginRoute
   '/pricing': typeof PricingRoute
-  '/programs': typeof ProgramsRoute
   '/signup': typeof SignupRoute
   '/admin/contacts': typeof AdminContactsRoute
   '/admin/users': typeof AdminUsersRoute
@@ -87,9 +87,9 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/contact': typeof ContactRoute
+  '/events': typeof EventsRoute
   '/login': typeof LoginRoute
   '/pricing': typeof PricingRoute
-  '/programs': typeof ProgramsRoute
   '/signup': typeof SignupRoute
   '/admin/contacts': typeof AdminContactsRoute
   '/admin/users': typeof AdminUsersRoute
@@ -100,9 +100,9 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/contact': typeof ContactRoute
+  '/events': typeof EventsRoute
   '/login': typeof LoginRoute
   '/pricing': typeof PricingRoute
-  '/programs': typeof ProgramsRoute
   '/signup': typeof SignupRoute
   '/admin/contacts': typeof AdminContactsRoute
   '/admin/users': typeof AdminUsersRoute
@@ -114,9 +114,9 @@ export interface FileRouteTypes {
     | '/'
     | '/about'
     | '/contact'
+    | '/events'
     | '/login'
     | '/pricing'
-    | '/programs'
     | '/signup'
     | '/admin/contacts'
     | '/admin/users'
@@ -126,9 +126,9 @@ export interface FileRouteTypes {
     | '/'
     | '/about'
     | '/contact'
+    | '/events'
     | '/login'
     | '/pricing'
-    | '/programs'
     | '/signup'
     | '/admin/contacts'
     | '/admin/users'
@@ -138,9 +138,9 @@ export interface FileRouteTypes {
     | '/'
     | '/about'
     | '/contact'
+    | '/events'
     | '/login'
     | '/pricing'
-    | '/programs'
     | '/signup'
     | '/admin/contacts'
     | '/admin/users'
@@ -151,9 +151,9 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AboutRoute: typeof AboutRoute
   ContactRoute: typeof ContactRoute
+  EventsRoute: typeof EventsRoute
   LoginRoute: typeof LoginRoute
   PricingRoute: typeof PricingRoute
-  ProgramsRoute: typeof ProgramsRoute
   SignupRoute: typeof SignupRoute
   AdminContactsRoute: typeof AdminContactsRoute
   AdminUsersRoute: typeof AdminUsersRoute
@@ -169,13 +169,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SignupRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/programs': {
-      id: '/programs'
-      path: '/programs'
-      fullPath: '/programs'
-      preLoaderRoute: typeof ProgramsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/pricing': {
       id: '/pricing'
       path: '/pricing'
@@ -188,6 +181,13 @@ declare module '@tanstack/react-router' {
       path: '/login'
       fullPath: '/login'
       preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/events': {
+      id: '/events'
+      path: '/events'
+      fullPath: '/events'
+      preLoaderRoute: typeof EventsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/contact': {
@@ -239,9 +239,9 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AboutRoute: AboutRoute,
   ContactRoute: ContactRoute,
+  EventsRoute: EventsRoute,
   LoginRoute: LoginRoute,
   PricingRoute: PricingRoute,
-  ProgramsRoute: ProgramsRoute,
   SignupRoute: SignupRoute,
   AdminContactsRoute: AdminContactsRoute,
   AdminUsersRoute: AdminUsersRoute,

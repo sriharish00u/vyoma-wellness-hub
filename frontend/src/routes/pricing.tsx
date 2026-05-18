@@ -1,8 +1,9 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState, useEffect } from "react";
-import { Check, Pencil, Plus, Trash2, GripVertical } from "lucide-react";
+import { Check, Pencil, Plus, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { toast } from "sonner";
@@ -26,6 +27,7 @@ function PricingPage() {
   const [plans, setPlans] = useState<Plan[]>(staticPlans);
   const [editOpen, setEditOpen] = useState(false);
   const [editPlans, setEditPlans] = useState<Plan[]>([]);
+  const [editFeatures, setEditFeatures] = useState<string[]>([]);
   const [saving, setSaving] = useState(false);
   const isAdmin = auth.isAdmin();
 
@@ -37,6 +39,7 @@ function PricingPage() {
 
   const handleEdit = () => {
     setEditPlans(plans.map((p) => ({ ...p, features: [...p.features] })));
+    setEditFeatures(plans.map((p) => p.features.join("\n")));
     setEditOpen(true);
   };
 
@@ -44,23 +47,25 @@ function PricingPage() {
     setEditPlans((prev) => prev.map((p, i) => (i === idx ? { ...p, [field]: value } : p)));
   };
 
-  const updateFeatures = (idx: number, featuresStr: string) => {
-    setEditPlans((prev) => prev.map((p, i) => (i === idx ? { ...p, features: featuresStr.split(",").map((f) => f.trim()).filter(Boolean) } : p)));
-  };
-
   const addPlan = () => {
     setEditPlans((prev) => [...prev, { name: "", price: "", period: "", features: [], cta: "Sign up", highlight: false }]);
+    setEditFeatures((prev) => [...prev, ""]);
   };
 
   const removePlan = (idx: number) => {
     setEditPlans((prev) => prev.filter((_, i) => i !== idx));
+    setEditFeatures((prev) => prev.filter((_, i) => i !== idx));
   };
 
   const handleSave = async () => {
     setSaving(true);
     try {
-      await api.settings.update("pricing", editPlans);
-      setPlans(editPlans);
+      const finalPlans = editPlans.map((p, i) => ({
+        ...p,
+        features: editFeatures[i].split("\n").map((f) => f.trim()).filter(Boolean),
+      }));
+      await api.settings.update("pricing", finalPlans);
+      setPlans(finalPlans);
       toast.success("Pricing updated");
       setEditOpen(false);
     } catch {
@@ -154,8 +159,13 @@ function PricingPage() {
                   </div>
                 </div>
                 <div className="space-y-1">
-                  <Label className="text-xs">Features (comma separated)</Label>
-                  <Input value={p.features.join(", ")} onChange={(e) => updateFeatures(idx, e.target.value)} placeholder="Daily live sessions, Full library..." />
+                  <Label className="text-xs">Features (one per line)</Label>
+                  <Textarea
+                    value={editFeatures[idx] ?? ""}
+                    onChange={(e) => setEditFeatures((prev) => prev.map((s, i) => (i === idx ? e.target.value : s)))}
+                    placeholder="Daily live sessions&#10;Full library..."
+                    rows={4}
+                  />
                 </div>
                 <label className="flex items-center gap-2 text-sm">
                   <input type="checkbox" checked={p.highlight} onChange={(e) => updatePlan(idx, "highlight", e.target.checked)} className="rounded" />

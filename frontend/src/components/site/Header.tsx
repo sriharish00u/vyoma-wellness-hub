@@ -7,7 +7,7 @@ import { auth } from "@/lib/auth";
 
 const nav = [
   { to: "/", label: "Home" },
-  { to: "/programs", label: "Programs" },
+  { to: "/events", label: "Events" },
   { to: "/about", label: "About" },
   { to: "/pricing", label: "Pricing" },
   { to: "/contact", label: "Contact" },

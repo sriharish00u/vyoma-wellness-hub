@@ -78,6 +78,9 @@ export const api = {
     delete: (id: string) =>
       request<{ success: boolean }>(`/sessions/${id}`, { method: "DELETE" }),
   },
+  stats: {
+    get: () => request<Stats>("/admin/stats"),
+  },
   quotes: {
     list: () => request<Quote[]>("/quotes"),
     create: (text: string) => request<Quote>("/quotes", { method: "POST", body: JSON.stringify({ text }) }),
@@ -186,6 +189,15 @@ export type Event = {
   recordingUrl: string;
   coverImage: string;
   order: number;
+};
+
+export type Stats = {
+  users: number;
+  admins: number;
+  verified: number;
+  sessions: number;
+  programs: number;
+  events: number;
 };
 
 export type Quote = {

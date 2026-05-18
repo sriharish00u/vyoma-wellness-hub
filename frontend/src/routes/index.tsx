@@ -4,7 +4,7 @@ import { ArrowRight, Check, Star, Quote, Send } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
-import { features, stats, testimonials } from "@/data/content";
+import { features, testimonials } from "@/data/content";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { api } from "@/lib/api";
 import { getIcon } from "@/lib/icons";
@@ -42,6 +42,21 @@ function Index() {
     queryFn: () => api.quotes.list(),
   });
 
+  const { data: upcomingEvents = [] } = useQuery({
+    queryKey: ["events", "upcoming"],
+    queryFn: () => api.events.list("upcoming"),
+  });
+
+  const { data: realStats } = useQuery({
+    queryKey: ["stats"],
+    queryFn: () => api.stats.get(),
+  });
+
+  const { data: totalSessions = [] } = useQuery({
+    queryKey: ["sessions"],
+    queryFn: () => api.sessions.list(),
+  });
+
   const quoteMutation = useMutation({
     mutationFn: (text: string) => api.quotes.create(text),
     onSuccess: () => {
@@ -54,7 +69,23 @@ function Index() {
 
   // Hero bento: use real data when logged in, demo values for marketing UI when logged out
   const streakDisplay = me?.streak ?? 42;
-  const sessionsDisplay = me?.sessionsCompleted ?? 6;
+  const joinedDisplay = me?.sessionsCompleted ?? 0;
+  const totalSessionsCount = totalSessions.length;
+
+  const latestEvent = upcomingEvents[0];
+  const displayStats = realStats
+    ? [
+        { value: `${realStats.users + realStats.admins}`, label: "Total members" },
+        { value: `${realStats.verified}`, label: "Verified" },
+        { value: `${realStats.admins}`, label: "Admins" },
+        { value: `${realStats.sessions}`, label: "Sessions" },
+      ]
+    : [
+        { value: "—", label: "Total members" },
+        { value: "—", label: "Verified" },
+        { value: "—", label: "Admins" },
+        { value: "—", label: "Sessions" },
+      ];
 
   return (
     <>
@@ -80,7 +111,7 @@ function Index() {
                 <Link to="/signup">Start your free week <ArrowRight className="ml-1 h-4 w-4" /></Link>
               </Button>
               <Button asChild size="lg" variant="outline">
-                <Link to="/programs">Browse programs</Link>
+                <Link to="/events">Browse events</Link>
               </Button>
             </div>
             <div className="mt-10 flex items-center gap-6 text-sm text-muted-foreground">
@@ -97,36 +128,74 @@ function Index() {
           <div className="relative animate-fade-up">
             <div className="grid grid-cols-6 grid-rows-6 gap-3 sm:gap-4">
               <div className="col-span-4 row-span-3 rounded-2xl bg-primary p-6 text-primary-foreground hover-lift">
-                <p className="text-xs font-medium uppercase tracking-widest opacity-70">Today · Live</p>
-                <p className="mt-3 font-display text-2xl font-bold leading-tight">Morning Yoga Flow</p>
-                <p className="mt-1 text-sm opacity-80">06:30 · 20 min · with Coach Ananya</p>
-                <div className="mt-6 inline-flex items-center gap-2 rounded-md bg-primary-foreground/10 px-3 py-1.5 text-xs font-medium">
-                  <span className="h-1.5 w-1.5 rounded-full bg-emerald" />
-                  In session
-                </div>
+                {latestEvent ? (
+                  <>
+                    <p className="text-xs font-medium uppercase tracking-widest opacity-70">
+                      {new Date(latestEvent.scheduledAt).toLocaleDateString("en-IN", { weekday: "short", day: "numeric", month: "short" })}
+                      {latestEvent.status === "live" ? " · Live" : ""}
+                    </p>
+                    <p className="mt-3 font-display text-2xl font-bold leading-tight">{latestEvent.title}</p>
+                    <p className="mt-1 text-sm opacity-80">
+                      {new Date(latestEvent.scheduledAt).toLocaleTimeString("en-IN", { hour: "2-digit", minute: "2-digit" })} · {latestEvent.durationMin} min · {latestEvent.mode === "online" ? "Online" : "Offline"}
+                    </p>
+                    {latestEvent.status === "live" && (
+                      <div className="mt-6 inline-flex items-center gap-2 rounded-md bg-primary-foreground/10 px-3 py-1.5 text-xs font-medium">
+                        <span className="h-1.5 w-1.5 rounded-full bg-emerald" />
+                        Live now
+                      </div>
+                    )}
+                    {latestEvent.status === "upcoming" && latestEvent.joinLink && (
+                      <div className="mt-6">
+                        <Button asChild size="sm" className="bg-orange text-orange-foreground hover:bg-orange/90">
+                          <a href={latestEvent.joinLink} target="_blank" rel="noopener noreferrer">Join now</a>
+                        </Button>
+                      </div>
+                    )}
+                  </>
+                ) : (
+                  <>
+                    <p className="text-xs font-medium uppercase tracking-widest opacity-70">Today</p>
+                    <p className="mt-3 font-display text-2xl font-bold leading-tight">No upcoming events</p>
+                    <p className="mt-1 text-sm opacity-80">Check back soon</p>
+                  </>
+                )}
               </div>
               <div className="col-span-2 row-span-3 rounded-2xl bg-emerald p-5 text-emerald-foreground hover-lift">
                 <p className="text-xs font-medium uppercase tracking-widest opacity-80">Streak</p>
                 <p className="mt-3 font-display text-4xl font-bold">{streakDisplay}</p>
                 <p className="text-sm opacity-85">days strong</p>
               </div>
-              <div className="col-span-3 row-span-3 rounded-2xl border border-border bg-card p-5 hover-lift">
-                <p className="text-xs font-medium uppercase tracking-widest text-muted-foreground">This week</p>
-                <p className="mt-3 font-display text-2xl font-bold text-foreground">{sessionsDisplay} / 7</p>
-                <p className="text-sm text-muted-foreground">sessions completed</p>
+              <Link to="/events" className="col-span-3 row-span-3 rounded-2xl border border-border bg-card p-5 hover-lift block">
+                <p className="text-xs font-medium uppercase tracking-widest text-muted-foreground">Joined</p>
+                <p className="mt-3 font-display text-2xl font-bold text-foreground">{joinedDisplay}{totalSessionsCount > 0 ? ` / ${totalSessionsCount}` : ""}</p>
+                <p className="text-sm text-muted-foreground">sessions joined</p>
                 <div className="mt-4 flex gap-1.5">
-                  {Array.from({ length: 7 }).map((_, i) => (
+                  {Array.from({ length: Math.max(totalSessionsCount, 1) }).map((_, i) => (
                     <span
                       key={i}
-                      className={`h-2 flex-1 rounded-full ${i < sessionsDisplay ? "bg-primary" : "bg-border"}`}
+                      className={`h-2 flex-1 rounded-full ${i < joinedDisplay ? "bg-primary" : "bg-border"}`}
                     />
                   ))}
                 </div>
-              </div>
+              </Link>
               <div className="col-span-3 row-span-3 rounded-2xl bg-ink p-5 text-background hover-lift">
                 <p className="text-xs font-medium uppercase tracking-widest opacity-70">Next up</p>
-                <p className="mt-3 font-display text-lg font-bold">Pranayama Basics</p>
-                <p className="mt-1 text-sm opacity-80">07:00 · 15 min</p>
+                {latestEvent ? (
+                  <>
+                    <p className="mt-3 font-display text-lg font-bold">{latestEvent.title}</p>
+                    <p className="mt-1 text-sm opacity-80">
+                      {new Date(latestEvent.scheduledAt).toLocaleTimeString("en-IN", { hour: "2-digit", minute: "2-digit" })} · {latestEvent.durationMin} min
+                    </p>
+                    {latestEvent.mode === "offline" && latestEvent.place && (
+                      <p className="mt-1 text-sm opacity-70">{latestEvent.place}</p>
+                    )}
+                  </>
+                ) : (
+                  <>
+                    <p className="mt-3 font-display text-lg font-bold">No events</p>
+                    <p className="mt-1 text-sm opacity-80">Check back later</p>
+                  </>
+                )}
                 <div className="mt-4 inline-flex h-9 w-9 items-center justify-center rounded-full bg-orange text-orange-foreground">
                   <ArrowRight className="h-4 w-4" />
                 </div>
@@ -139,7 +208,7 @@ function Index() {
       {/* STATS */}
       <section className="border-y border-border bg-secondary/50">
         <div className="mx-auto grid max-w-7xl grid-cols-2 gap-y-8 px-4 py-10 sm:px-6 md:grid-cols-4 lg:px-8">
-          {stats.map((s) => (
+          {displayStats.map((s) => (
             <div key={s.label} className="text-center">
               <p className="font-display text-3xl font-bold text-foreground sm:text-4xl">{s.value}</p>
               <p className="mt-1 text-xs uppercase tracking-widest text-muted-foreground">{s.label}</p>
@@ -183,7 +252,7 @@ function Index() {
               </h2>
             </div>
             <Button asChild variant="outline">
-              <Link to="/programs">View all programs <ArrowRight className="ml-1 h-4 w-4" /></Link>
+              <Link to="/events">View all events <ArrowRight className="ml-1 h-4 w-4" /></Link>
             </Button>
           </div>
           <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">

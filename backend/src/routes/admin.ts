@@ -1,9 +1,28 @@
 import { Router } from "express";
 import { User } from "../models/User";
 import { Contact } from "../models/Contact";
+import { Session } from "../models/Session";
+import { Program } from "../models/Program";
+import { Event } from "../models/Event";
 import { verifyToken, requireAdmin } from "../middleware/auth";
 
 const router = Router();
+
+router.get("/stats", async (_req, res, next) => {
+  try {
+    const [users, admins, verified, sessions, programs, events] = await Promise.all([
+      User.countDocuments({ role: "user" }),
+      User.countDocuments({ role: "admin" }),
+      User.countDocuments({ isVerified: true }),
+      Session.countDocuments(),
+      Program.countDocuments(),
+      Event.countDocuments(),
+    ]);
+    res.json({ users, admins, verified, sessions, programs, events });
+  } catch (err) {
+    next(err);
+  }
+});
 
 router.get("/users", verifyToken, requireAdmin, async (req, res, next) => {
   try {
