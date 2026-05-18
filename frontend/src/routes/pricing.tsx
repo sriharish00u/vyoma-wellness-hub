@@ -31,7 +31,7 @@ function PricingPage() {
               p.highlight ? "border-primary bg-primary text-primary-foreground" : "border-border bg-card"
             }`}
           >
-            <p className={`text-sm font-semibold uppercase tracking-widest ${p.highlight ? "text-emerald" : "text-emerald"}`}>
+            <p className={`text-sm font-semibold uppercase tracking-widest ${p.highlight ? "text-emerald-foreground" : "text-emerald"}`}>
               {p.name}
             </p>
             <div className="mt-4 flex items-baseline gap-1.5">

@@ -1,7 +1,11 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowRight, Check, Star, Quote } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { features, programs, stats, testimonials } from "@/data/content";
+import { features, stats, testimonials } from "@/data/content";
+import { useQuery } from "@tanstack/react-query";
+import { api } from "@/lib/api";
+import { getIcon } from "@/lib/icons";
+import { auth } from "@/lib/auth";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -14,6 +18,17 @@ export const Route = createFileRoute("/")({
 });
 
 function Index() {
+  const { data: programs = [] } = useQuery({
+    queryKey: ["programs", "All"],
+    queryFn: () => api.programs.list(),
+  });
+
+  const { data: me } = useQuery({
+    queryKey: ["me"],
+    queryFn: api.auth.me,
+    enabled: auth.isLoggedIn(),
+  });
+
   return (
     <>
       {/* HERO */}
@@ -66,12 +81,12 @@ function Index() {
               </div>
               <div className="col-span-2 row-span-3 rounded-2xl bg-emerald p-5 text-emerald-foreground hover-lift">
                 <p className="text-xs font-medium uppercase tracking-widest opacity-80">Streak</p>
-                <p className="mt-3 font-display text-4xl font-bold">42</p>
+                <p className="mt-3 font-display text-4xl font-bold">{me?.streak ?? 42}</p>
                 <p className="text-sm opacity-85">days strong</p>
               </div>
               <div className="col-span-3 row-span-3 rounded-2xl border border-border bg-card p-5 hover-lift">
                 <p className="text-xs font-medium uppercase tracking-widest text-muted-foreground">This week</p>
-                <p className="mt-3 font-display text-2xl font-bold text-foreground">6 / 7</p>
+                <p className="mt-3 font-display text-2xl font-bold text-foreground">{me?.sessionsCompleted ?? 6} / 7</p>
                 <p className="text-sm text-muted-foreground">sessions completed</p>
                 <div className="mt-4 flex gap-1.5">
                   {[1,1,1,1,1,1,0].map((d, i) => (
@@ -143,27 +158,30 @@ function Index() {
             </Button>
           </div>
           <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-            {programs.slice(0, 6).map((p) => (
-              <article key={p.slug} className="hover-lift group flex flex-col rounded-xl border border-border bg-card p-6">
-                <div className="flex items-center justify-between">
-                  <span className="inline-flex items-center gap-2 rounded-full bg-secondary px-2.5 py-1 text-xs font-medium text-foreground">
-                    {p.tag}
-                  </span>
-                  <span className="text-xs text-muted-foreground">{p.duration}</span>
-                </div>
-                <div className="mt-6 grid h-12 w-12 place-items-center rounded-lg bg-primary text-primary-foreground">
-                  <p.icon className="h-6 w-6" />
-                </div>
-                <h3 className="mt-5 font-display text-xl font-semibold text-foreground">{p.title}</h3>
-                <p className="mt-2 flex-1 text-sm leading-relaxed text-muted-foreground">{p.desc}</p>
-                <div className="mt-6 flex items-center justify-between border-t border-border pt-4 text-sm">
-                  <span className="text-muted-foreground">{p.level}</span>
-                  <span className="inline-flex items-center gap-1 font-medium text-foreground group-hover:text-primary">
-                    Explore <ArrowRight className="h-4 w-4" />
-                  </span>
-                </div>
-              </article>
-            ))}
+            {programs.slice(0, 6).map((p) => {
+              const ProgramIcon = getIcon(p.icon);
+              return (
+                <article key={p.slug} className="hover-lift group flex flex-col rounded-xl border border-border bg-card p-6">
+                  <div className="flex items-center justify-between">
+                    <span className="inline-flex items-center gap-2 rounded-full bg-secondary px-2.5 py-1 text-xs font-medium text-foreground">
+                      {p.tag}
+                    </span>
+                    <span className="text-xs text-muted-foreground">{p.duration}</span>
+                  </div>
+                  <div className="mt-6 grid h-12 w-12 place-items-center rounded-lg bg-primary text-primary-foreground">
+                    <ProgramIcon className="h-6 w-6" />
+                  </div>
+                  <h3 className="mt-5 font-display text-xl font-semibold text-foreground">{p.title}</h3>
+                  <p className="mt-2 flex-1 text-sm leading-relaxed text-muted-foreground">{p.desc}</p>
+                  <div className="mt-6 flex items-center justify-between border-t border-border pt-4 text-sm">
+                    <span className="text-muted-foreground">{p.level}</span>
+                    <span className="inline-flex items-center gap-1 font-medium text-foreground group-hover:text-primary">
+                      Explore <ArrowRight className="h-4 w-4" />
+                    </span>
+                  </div>
+                </article>
+              );
+            })}
           </div>
         </div>
       </section>

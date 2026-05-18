@@ -3,6 +3,7 @@ import { Link, useRouterState } from "@tanstack/react-router";
 import { Menu, X } from "lucide-react";
 import { Logo } from "./Logo";
 import { Button } from "@/components/ui/button";
+import { auth } from "@/lib/auth";
 
 const nav = [
   { to: "/programs", label: "Programs" },
@@ -14,6 +15,8 @@ const nav = [
 export function Header() {
   const [open, setOpen] = useState(false);
   const path = useRouterState({ select: (s) => s.location.pathname });
+  const user = auth.getUser();
+  const loggedIn = auth.isLoggedIn();
 
   return (
     <header className="sticky top-0 z-40 border-b border-border bg-background/85 backdrop-blur supports-[backdrop-filter]:bg-background/70">
@@ -33,14 +36,23 @@ export function Header() {
             );
           })}
         </nav>
-        <div className="hidden items-center gap-2 md:flex">
-          <Button asChild variant="ghost" size="sm">
-            <Link to="/login">Login</Link>
-          </Button>
-          <Button asChild size="sm" className="bg-primary text-primary-foreground hover:bg-primary/90">
-            <Link to="/signup">Start free</Link>
-          </Button>
-        </div>
+        {loggedIn ? (
+          <div className="hidden items-center gap-2 md:flex">
+            <span className="text-sm font-medium">{user?.name}</span>
+            <Button variant="ghost" size="sm" onClick={() => { auth.clear(); window.location.href = "/"; }}>
+              Sign out
+            </Button>
+          </div>
+        ) : (
+          <div className="hidden items-center gap-2 md:flex">
+            <Button asChild variant="ghost" size="sm">
+              <Link to="/login">Login</Link>
+            </Button>
+            <Button asChild size="sm" className="bg-primary text-primary-foreground hover:bg-primary/90">
+              <Link to="/signup">Start free</Link>
+            </Button>
+          </div>
+        )}
         <button
           aria-label="Toggle menu"
           aria-expanded={open}
@@ -65,12 +77,20 @@ export function Header() {
                 </Link>
               ))}
               <div className="mt-2 flex gap-2 px-1">
-                <Button asChild variant="outline" size="sm" className="flex-1">
-                  <Link to="/login" onClick={() => setOpen(false)}>Login</Link>
-                </Button>
-                <Button asChild size="sm" className="flex-1 bg-primary text-primary-foreground">
-                  <Link to="/signup" onClick={() => setOpen(false)}>Start free</Link>
-                </Button>
+                {loggedIn ? (
+                  <Button variant="outline" size="sm" className="flex-1" onClick={() => { auth.clear(); window.location.href = "/"; }}>
+                    Sign out
+                  </Button>
+                ) : (
+                  <>
+                    <Button asChild variant="outline" size="sm" className="flex-1">
+                      <Link to="/login" onClick={() => setOpen(false)}>Login</Link>
+                    </Button>
+                    <Button asChild size="sm" className="flex-1 bg-primary text-primary-foreground">
+                      <Link to="/signup" onClick={() => setOpen(false)}>Start free</Link>
+                    </Button>
+                  </>
+                )}
               </div>
             </nav>
           </div>
