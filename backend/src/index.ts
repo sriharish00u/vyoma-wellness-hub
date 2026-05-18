@@ -1,16 +1,16 @@
 import "dotenv/config";
 import express from "express";
 import cors from "cors";
-import { connectDB } from "./config/db";
-import { errorHandler } from "./middleware/errorHandler";
-import authRoutes from "./routes/auth";
-import programRoutes from "./routes/programs";
-import contactRoutes from "./routes/contact";
-import adminRoutes from "./routes/admin";
-import sessionRoutes from "./routes/sessions";
-import eventRoutes from "./routes/events";
-import settingsRoutes from "./routes/settings";
-import quoteRoutes from "./routes/quotes";
+import { connectDB } from "./config/db.js";
+import { errorHandler } from "./middleware/errorHandler.js";
+import authRoutes from "./routes/auth.js";
+import programRoutes from "./routes/programs.js";
+import contactRoutes from "./routes/contact.js";
+import adminRoutes from "./routes/admin.js";
+import sessionRoutes from "./routes/sessions.js";
+import eventRoutes from "./routes/events.js";
+import settingsRoutes from "./routes/settings.js";
+import quoteRoutes from "./routes/quotes.js";
 
 const app = express();
 const PORT = process.env.PORT ?? 3001;

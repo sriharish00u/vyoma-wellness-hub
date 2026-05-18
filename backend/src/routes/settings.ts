@@ -1,6 +1,6 @@
 import { Router } from "express";
-import { Settings } from "../models/Settings";
-import { verifyToken, requireAdmin } from "../middleware/auth";
+import { Settings } from "../models/Settings.js";
+import { verifyToken, requireAdmin } from "../middleware/auth.js";
 
 const router = Router();
 

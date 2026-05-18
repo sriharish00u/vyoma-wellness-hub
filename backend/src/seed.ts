@@ -1,6 +1,6 @@
 import "dotenv/config";
 import mongoose from "mongoose";
-import { Program } from "./models/Program";
+import { Program } from "./models/Program.js";
 
 const programs = [
   { slug: "morning-yoga", title: "Morning Yoga Flow", level: "Beginner", duration: "20 min", icon: "Sunrise", tag: "Yoga", desc: "Gentle vinyasa to wake the body and steady the mind.", order: 1 },

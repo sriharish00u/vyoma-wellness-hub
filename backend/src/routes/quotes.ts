@@ -1,7 +1,7 @@
 import { Router } from "express";
-import { Quote } from "../models/Quote";
-import { User } from "../models/User";
-import { verifyToken } from "../middleware/auth";
+import { Quote } from "../models/Quote.js";
+import { User } from "../models/User.js";
+import { verifyToken } from "../middleware/auth.js";
 
 const router = Router();
 

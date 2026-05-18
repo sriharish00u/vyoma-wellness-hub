@@ -1,6 +1,6 @@
 import { Router } from "express";
-import { Contact } from "../models/Contact";
-import { contactSchema } from "../schemas";
+import { Contact } from "../models/Contact.js";
+import { contactSchema } from "../schemas/index.js";
 
 const router = Router();
 

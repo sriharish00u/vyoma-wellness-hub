@@ -2,7 +2,7 @@ import "dotenv/config";
 import mongoose from "mongoose";
 import bcrypt from "bcryptjs";
 import * as readline from "readline";
-import { User } from "./models/User";
+import { User } from "./models/User.js";
 
 const uri = process.env.MONGO_URI ?? "mongodb://localhost:27017/vyoma";
 

@@ -1,7 +1,7 @@
 import { Router } from "express";
-import { Program } from "../models/Program";
-import { verifyToken, requireAdmin } from "../middleware/auth";
-import { programSchema } from "../schemas";
+import { Program } from "../models/Program.js";
+import { verifyToken, requireAdmin } from "../middleware/auth.js";
+import { programSchema } from "../schemas/index.js";
 
 const router = Router();
 

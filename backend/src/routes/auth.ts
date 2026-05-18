@@ -2,9 +2,9 @@ import { Router } from "express";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import rateLimit from "express-rate-limit";
-import { User } from "../models/User";
-import { registerSchema, loginSchema } from "../schemas";
-import { verifyToken } from "../middleware/auth";
+import { User } from "../models/User.js";
+import { registerSchema, loginSchema } from "../schemas/index.js";
+import { verifyToken } from "../middleware/auth.js";
 
 const router = Router();
 

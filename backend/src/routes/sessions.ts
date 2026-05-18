@@ -1,7 +1,7 @@
 import { Router } from "express";
-import { Session } from "../models/Session";
-import { verifyToken, requireAdmin } from "../middleware/auth";
-import { sessionSchema } from "../schemas";
+import { Session } from "../models/Session.js";
+import { verifyToken, requireAdmin } from "../middleware/auth.js";
+import { sessionSchema } from "../schemas/index.js";
 
 const router = Router();
 

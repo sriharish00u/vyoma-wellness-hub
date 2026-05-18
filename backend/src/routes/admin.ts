@@ -1,10 +1,10 @@
 import { Router } from "express";
-import { User } from "../models/User";
-import { Contact } from "../models/Contact";
-import { Session } from "../models/Session";
-import { Program } from "../models/Program";
-import { Event } from "../models/Event";
-import { verifyToken, requireAdmin } from "../middleware/auth";
+import { User } from "../models/User.js";
+import { Contact } from "../models/Contact.js";
+import { Session } from "../models/Session.js";
+import { Program } from "../models/Program.js";
+import { Event } from "../models/Event.js";
+import { verifyToken, requireAdmin } from "../middleware/auth.js";
 
 const router = Router();
 
