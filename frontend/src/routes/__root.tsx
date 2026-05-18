@@ -1,4 +1,4 @@
-import { createRootRoute, Outlet } from "@tanstack/react-router"
+import { createRootRoute, Outlet, useRouterState } from "@tanstack/react-router"
 import { Component, type ReactNode } from "react"
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
 
@@ -27,7 +27,10 @@ class ErrorBoundary extends Component<{ children: ReactNode }, { hasError: boole
           <div className="max-w-md text-center">
             <h1 className="font-display text-2xl font-bold text-foreground">Something went wrong</h1>
             <p className="mt-2 text-sm text-muted-foreground">An unexpected error occurred. Please try again.</p>
-            <Button onClick={() => { this.setState({ hasError: false }); window.location.href = "/"; }} className="mt-6">
+            <Button
+              onClick={() => { this.setState({ hasError: false }); window.location.href = "/"; }}
+              className="mt-6"
+            >
               Go home
             </Button>
           </div>
@@ -39,17 +42,17 @@ class ErrorBoundary extends Component<{ children: ReactNode }, { hasError: boole
 }
 
 function RootComponent() {
+  const pathname = useRouterState({ select: (s) => s.location.pathname })
+
   return (
     <QueryClientProvider client={queryClient}>
       <div className="min-h-screen bg-background text-foreground">
         <Header />
-
         <main>
-          <ErrorBoundary>
+          <ErrorBoundary key={pathname}>
             <Outlet />
           </ErrorBoundary>
         </main>
-
         <Footer />
       </div>
       <Toaster position="top-right" richColors />

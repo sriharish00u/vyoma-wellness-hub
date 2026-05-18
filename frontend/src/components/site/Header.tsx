@@ -1,11 +1,12 @@
 import { useState } from "react";
 import { Link, useRouterState } from "@tanstack/react-router";
-import { Menu, X } from "lucide-react";
+import { Menu, X, LogOut, ShieldCheck, BadgeCheck } from "lucide-react";
 import { Logo } from "./Logo";
 import { Button } from "@/components/ui/button";
 import { auth } from "@/lib/auth";
 
 const nav = [
+  { to: "/", label: "Home" },
   { to: "/programs", label: "Programs" },
   { to: "/about", label: "About" },
   { to: "/pricing", label: "Pricing" },
@@ -17,6 +18,14 @@ export function Header() {
   const path = useRouterState({ select: (s) => s.location.pathname });
   const user = auth.getUser();
   const loggedIn = auth.isLoggedIn();
+  const isAdmin = auth.isAdmin();
+
+  if (path.startsWith("/admin")) return null;
+
+  const handleSignOut = () => {
+    auth.clear();
+    window.location.href = "/login";
+  };
 
   return (
     <header className="sticky top-0 z-40 border-b border-border bg-background/85 backdrop-blur supports-[backdrop-filter]:bg-background/70">
@@ -36,23 +45,32 @@ export function Header() {
             );
           })}
         </nav>
-        {loggedIn ? (
-          <div className="hidden items-center gap-2 md:flex">
-            <span className="text-sm font-medium">{user?.name}</span>
-            <Button variant="ghost" size="sm" onClick={() => { auth.clear(); window.location.href = "/"; }}>
-              Sign out
-            </Button>
-          </div>
-        ) : (
-          <div className="hidden items-center gap-2 md:flex">
-            <Button asChild variant="ghost" size="sm">
-              <Link to="/login">Login</Link>
-            </Button>
-            <Button asChild size="sm" className="bg-primary text-primary-foreground hover:bg-primary/90">
-              <Link to="/signup">Start free</Link>
-            </Button>
-          </div>
-        )}
+
+        <div className="hidden items-center gap-2 md:flex">
+          {loggedIn ? (
+            <>
+              <span className="flex items-center gap-1.5 text-sm font-medium text-foreground">
+                {user?.name}
+                {isAdmin && <ShieldCheck className="h-3.5 w-3.5 text-orange" />}
+                {user?.isVerified && <BadgeCheck className="h-3.5 w-3.5 text-emerald" />}
+              </span>
+              <Button variant="ghost" size="sm" onClick={handleSignOut} className="gap-1.5">
+                <LogOut className="h-4 w-4" />
+                Sign out
+              </Button>
+            </>
+          ) : (
+            <>
+              <Button asChild variant="ghost" size="sm">
+                <Link to="/login">Login</Link>
+              </Button>
+              <Button asChild size="sm" className="bg-primary text-primary-foreground hover:bg-primary/90">
+                <Link to="/signup">Start free</Link>
+              </Button>
+            </>
+          )}
+        </div>
+
         <button
           aria-label="Toggle menu"
           aria-expanded={open}
@@ -62,6 +80,7 @@ export function Header() {
           {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
         </button>
       </div>
+
       {open && (
         <div className="border-t border-border bg-background md:hidden">
           <div className="mx-auto max-w-7xl px-4 py-3 sm:px-6">
@@ -76,20 +95,33 @@ export function Header() {
                   {item.label}
                 </Link>
               ))}
-              <div className="mt-2 flex gap-2 px-1">
+              <div className="mt-2 flex flex-col gap-2 px-1">
                 {loggedIn ? (
-                  <Button variant="outline" size="sm" className="flex-1" onClick={() => { auth.clear(); window.location.href = "/"; }}>
-                    Sign out
-                  </Button>
-                ) : (
                   <>
+                    <div className="flex items-center gap-1.5 px-3 py-2 text-sm text-foreground">
+                      {user?.name}
+                      {isAdmin && <ShieldCheck className="h-3.5 w-3.5 text-orange" />}
+                      {user?.isVerified && <BadgeCheck className="h-3.5 w-3.5 text-emerald" />}
+                    </div>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="justify-start gap-1.5"
+                      onClick={() => { setOpen(false); handleSignOut(); }}
+                    >
+                      <LogOut className="h-4 w-4" />
+                      Sign out
+                    </Button>
+                  </>
+                ) : (
+                  <div className="flex gap-2">
                     <Button asChild variant="outline" size="sm" className="flex-1">
                       <Link to="/login" onClick={() => setOpen(false)}>Login</Link>
                     </Button>
                     <Button asChild size="sm" className="flex-1 bg-primary text-primary-foreground">
                       <Link to="/signup" onClick={() => setOpen(false)}>Start free</Link>
                     </Button>
-                  </>
+                  </div>
                 )}
               </div>
             </nav>

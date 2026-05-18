@@ -1,4 +1,5 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -23,6 +24,13 @@ type FormData = z.infer<typeof schema>;
 
 function LoginPage() {
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (auth.isLoggedIn()) {
+      navigate({ to: "/" });
+    }
+  }, [navigate]);
+
   const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm<FormData>({
     resolver: zodResolver(schema),
   });

@@ -1,8 +1,11 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { ArrowRight, Check, Star, Quote } from "lucide-react";
+import { useState } from "react";
+import { ArrowRight, Check, Star, Quote, Send } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Textarea } from "@/components/ui/textarea";
+import { toast } from "sonner";
 import { features, stats, testimonials } from "@/data/content";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { api } from "@/lib/api";
 import { getIcon } from "@/lib/icons";
 import { auth } from "@/lib/auth";
@@ -18,6 +21,11 @@ export const Route = createFileRoute("/")({
 });
 
 function Index() {
+  const qc = useQueryClient();
+  const [quoteText, setQuoteText] = useState("");
+  const user = auth.getUser();
+  const isVerified = user?.isVerified ?? false;
+
   const { data: programs = [] } = useQuery({
     queryKey: ["programs", "All"],
     queryFn: () => api.programs.list(),
@@ -28,6 +36,25 @@ function Index() {
     queryFn: api.auth.me,
     enabled: auth.isLoggedIn(),
   });
+
+  const { data: quotes = [] } = useQuery({
+    queryKey: ["quotes"],
+    queryFn: () => api.quotes.list(),
+  });
+
+  const quoteMutation = useMutation({
+    mutationFn: (text: string) => api.quotes.create(text),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ["quotes"] });
+      toast.success("Quote posted");
+      setQuoteText("");
+    },
+    onError: (err: Error) => toast.error(err.message),
+  });
+
+  // Hero bento: use real data when logged in, demo values for marketing UI when logged out
+  const streakDisplay = me?.streak ?? 42;
+  const sessionsDisplay = me?.sessionsCompleted ?? 6;
 
   return (
     <>
@@ -67,7 +94,6 @@ function Index() {
             </div>
           </div>
 
-          {/* Visual block — flat, no gradients */}
           <div className="relative animate-fade-up">
             <div className="grid grid-cols-6 grid-rows-6 gap-3 sm:gap-4">
               <div className="col-span-4 row-span-3 rounded-2xl bg-primary p-6 text-primary-foreground hover-lift">
@@ -81,16 +107,19 @@ function Index() {
               </div>
               <div className="col-span-2 row-span-3 rounded-2xl bg-emerald p-5 text-emerald-foreground hover-lift">
                 <p className="text-xs font-medium uppercase tracking-widest opacity-80">Streak</p>
-                <p className="mt-3 font-display text-4xl font-bold">{me?.streak ?? 42}</p>
+                <p className="mt-3 font-display text-4xl font-bold">{streakDisplay}</p>
                 <p className="text-sm opacity-85">days strong</p>
               </div>
               <div className="col-span-3 row-span-3 rounded-2xl border border-border bg-card p-5 hover-lift">
                 <p className="text-xs font-medium uppercase tracking-widest text-muted-foreground">This week</p>
-                <p className="mt-3 font-display text-2xl font-bold text-foreground">{me?.sessionsCompleted ?? 6} / 7</p>
+                <p className="mt-3 font-display text-2xl font-bold text-foreground">{sessionsDisplay} / 7</p>
                 <p className="text-sm text-muted-foreground">sessions completed</p>
                 <div className="mt-4 flex gap-1.5">
-                  {[1,1,1,1,1,1,0].map((d, i) => (
-                    <span key={i} className={`h-2 flex-1 rounded-full ${d ? "bg-primary" : "bg-border"}`} />
+                  {Array.from({ length: 7 }).map((_, i) => (
+                    <span
+                      key={i}
+                      className={`h-2 flex-1 rounded-full ${i < sessionsDisplay ? "bg-primary" : "bg-border"}`}
+                    />
                   ))}
                 </div>
               </div>
@@ -211,6 +240,61 @@ function Index() {
             </figure>
           ))}
         </div>
+      </section>
+
+      {/* QUOTES */}
+      <section className="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8">
+        <div className="max-w-2xl">
+          <p className="text-xs font-semibold uppercase tracking-widest text-emerald">Community</p>
+          <h2 className="mt-3 font-display text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
+            What members are saying.
+          </h2>
+        </div>
+
+        {isVerified && (
+          <div className="mt-8 rounded-xl border border-border bg-card p-5">
+            <p className="text-sm font-medium text-foreground mb-3">Share your experience</p>
+            <div className="flex gap-3">
+              <Textarea
+                value={quoteText}
+                onChange={(e) => setQuoteText(e.target.value)}
+                placeholder="What has Vyoma Wellness done for you? (10-500 characters)"
+                rows={2}
+                className="resize-none"
+                maxLength={500}
+              />
+              <Button
+                onClick={() => quoteMutation.mutate(quoteText)}
+                disabled={quoteText.length < 10 || quoteMutation.isPending}
+                className="bg-primary text-primary-foreground shrink-0 self-end"
+              >
+                <Send className="h-4 w-4" />
+              </Button>
+            </div>
+          </div>
+        )}
+
+        {quotes.length > 0 && (
+          <div className="mt-10 grid gap-5 md:grid-cols-3">
+            {(quotes as { _id: string; userName: string; text: string; createdAt: string }[]).map((q) => (
+              <figure key={q._id} className="rounded-xl border border-border bg-card p-6">
+                <Quote className="h-5 w-5 text-emerald" />
+                <blockquote className="mt-4 text-sm leading-relaxed text-foreground">"{q.text}"</blockquote>
+                <figcaption className="mt-6 flex items-center gap-3 border-t border-border pt-4">
+                  <div className="grid h-9 w-9 place-items-center rounded-full bg-primary font-display text-sm font-semibold text-primary-foreground">
+                    {q.userName[0]}
+                  </div>
+                  <div>
+                    <p className="text-sm font-semibold text-foreground">{q.userName}</p>
+                    <p className="text-xs text-muted-foreground">
+                      {new Date(q.createdAt).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" })}
+                    </p>
+                  </div>
+                </figcaption>
+              </figure>
+            ))}
+          </div>
+        )}
       </section>
 
       {/* CTA */}

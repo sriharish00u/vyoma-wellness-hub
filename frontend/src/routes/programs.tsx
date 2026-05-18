@@ -1,11 +1,15 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
-import { ArrowRight, Search } from "lucide-react";
+import { ArrowRight, Search, Calendar, Clock, User, Copy, ExternalLink, Youtube, Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useQuery, keepPreviousData } from "@tanstack/react-query";
+import { toast } from "sonner";
 import { api } from "@/lib/api";
 import { getIcon } from "@/lib/icons";
+import { auth } from "@/lib/auth";
+import { AdminCardActions, ProgramFormDialog, SessionFormDialog, EventFormDialog } from "@/components/AdminOverlay";
+import type { Program, Session, Event } from "@/lib/api";
 
 export const Route = createFileRoute("/programs")({
   head: () => ({
@@ -18,55 +22,40 @@ export const Route = createFileRoute("/programs")({
 });
 
 const tags = ["All", "Yoga", "Fitness", "Breathwork", "Meditation", "Motivation"] as const;
+type Tab = "upcoming" | "completed";
 
 function ProgramsPage() {
+  const [tab, setTab] = useState<Tab>("upcoming");
   const [active, setActive] = useState<(typeof tags)[number]>("All");
+  const [createTarget, setCreateTarget] = useState<"program" | "session" | "event" | null>(null);
+  const [editProgram, setEditProgram] = useState<Program | null>(null);
+  const [editSession, setEditSession] = useState<Session | null>(null);
+  const [editEvent, setEditEvent] = useState<Event | null>(null);
+  const isAdmin = auth.isAdmin();
 
-  const { data: list = [], isLoading, isError } = useQuery({
+  const { data: programs = [], isLoading: pLoad } = useQuery({
     queryKey: ["programs", active],
     queryFn: () => api.programs.list(active),
     placeholderData: keepPreviousData,
+    enabled: tab === "upcoming",
   });
 
-  if (isLoading) {
-    return (
-      <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
-        <header className="max-w-2xl animate-fade-up">
-          <p className="text-xs font-semibold uppercase tracking-widest text-emerald">Programs</p>
-          <h1 className="mt-3 font-display text-4xl font-bold tracking-tight text-foreground sm:text-5xl">
-            Practice with intention.
-          </h1>
-          <p className="mt-4 text-muted-foreground">
-            Short, structured sessions designed for everyday discipline. Filter by what you need today.
-          </p>
-        </header>
-        <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-          {Array.from({ length: 6 }).map((_, i) => (
-            <div key={i} className="rounded-xl border border-border bg-card p-6 space-y-4">
-              <Skeleton className="h-6 w-20 rounded-full" />
-              <Skeleton className="h-12 w-12 rounded-lg" />
-              <Skeleton className="h-5 w-3/4" />
-              <Skeleton className="h-4 w-full" />
-              <Skeleton className="h-4 w-5/6" />
-            </div>
-          ))}
-        </div>
-      </div>
-    );
-  }
+  const { data: sessions = [], isLoading: sLoad } = useQuery({
+    queryKey: ["sessions"],
+    queryFn: () => api.sessions.list(),
+    enabled: tab === "upcoming",
+  });
 
-  if (isError) {
-    return (
-      <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
-        <div className="mt-16 rounded-xl border border-dashed border-border bg-card p-12 text-center">
-          <p className="font-display text-lg font-semibold text-foreground">Failed to load programs</p>
-          <p className="mt-2 text-sm text-muted-foreground">Please try again.</p>
-        </div>
-      </div>
-    );
-  }
+  const { data: events = [], isLoading: eLoad } = useQuery({
+    queryKey: ["events", tab],
+    queryFn: () => api.events.list(tab),
+  });
 
-  const IconComp = list.length > 0 ? getIcon(list[0].icon) : Search;
+  const copyLink = (url: string) => {
+    navigator.clipboard.writeText(url).then(() => toast.success("Link copied"));
+  };
+
+  const isYouTube = (url: string) => /youtube\.com|youtu\.be/i.test(url);
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
@@ -76,17 +65,17 @@ function ProgramsPage() {
           Practice with intention.
         </h1>
         <p className="mt-4 text-muted-foreground">
-          Short, structured sessions designed for everyday discipline. Filter by what you need today.
+          Short, structured sessions designed for everyday discipline.
         </p>
       </header>
 
-      <div className="mt-10 flex flex-wrap gap-2">
-        {tags.map((t) => (
+      <div className="mt-10 flex gap-2">
+        {(["upcoming", "completed"] as const).map((t) => (
           <button
             key={t}
-            onClick={() => setActive(t)}
-            className={`rounded-full border px-3.5 py-1.5 text-sm font-medium transition-colors ${
-              active === t
+            onClick={() => setTab(t)}
+            className={`rounded-full border px-3.5 py-1.5 text-sm font-medium capitalize transition-colors ${
+              tab === t
                 ? "border-primary bg-primary text-primary-foreground"
                 : "border-border bg-card text-muted-foreground hover:text-foreground"
             }`}
@@ -96,42 +85,253 @@ function ProgramsPage() {
         ))}
       </div>
 
-      {list.length === 0 ? (
-        <div className="mt-16 rounded-xl border border-dashed border-border bg-card p-12 text-center">
-          <div className="mx-auto grid h-12 w-12 place-items-center rounded-full bg-secondary text-muted-foreground">
-            <Search className="h-6 w-6" />
+      {tab === "upcoming" && (
+        <>
+          <div className={`mt-10 flex flex-wrap gap-2 transition-opacity ${pLoad ? "opacity-60 pointer-events-none" : ""}`}>
+            {tags.map((t) => (
+              <button
+                key={t}
+                onClick={() => setActive(t)}
+                className={`rounded-full border px-3.5 py-1.5 text-sm font-medium transition-colors ${
+                  active === t
+                    ? "border-primary bg-primary text-primary-foreground"
+                    : "border-border bg-card text-muted-foreground hover:text-foreground"
+                }`}
+              >
+                {t}
+              </button>
+            ))}
           </div>
-          <p className="mt-4 font-display text-lg font-semibold">No programs in this category yet</p>
-          <p className="mt-2 text-sm text-muted-foreground">Try a different filter or check back soon.</p>
-          <button onClick={() => setActive("All")} className="mt-5 text-sm font-medium text-primary hover:underline">
-            View all programs →
-          </button>
-        </div>
-      ) : (
-        <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-          {list.map((p) => {
-            const ProgramIcon = getIcon(p.icon);
-            return (
-              <article key={p.slug} className="hover-lift group flex flex-col rounded-xl border border-border bg-card p-6">
-                <div className="flex items-center justify-between">
-                  <span className="rounded-full bg-secondary px-2.5 py-1 text-xs font-medium">{p.tag}</span>
-                  <span className="text-xs text-muted-foreground">{p.duration}</span>
+
+          <section className="mt-10">
+            <div className="flex items-center gap-3 mb-5">
+              <h2 className="font-display text-xl font-semibold text-foreground">Programs</h2>
+              {isAdmin && (
+                <button onClick={() => setCreateTarget("program")} className="grid h-6 w-6 place-items-center rounded-md bg-primary text-primary-foreground text-xs hover:bg-primary/90" title="Add program">
+                  <Plus className="h-3.5 w-3.5" />
+                </button>
+              )}
+            </div>
+            {pLoad ? (
+              <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+                {Array.from({ length: 6 }).map((_, i) => (
+                  <div key={i} className="rounded-xl border border-border bg-card p-6 space-y-4">
+                    <Skeleton className="h-6 w-20 rounded-full" />
+                    <Skeleton className="h-12 w-12 rounded-lg" />
+                    <Skeleton className="h-5 w-3/4" />
+                    <Skeleton className="h-4 w-full" />
+                    <Skeleton className="h-4 w-5/6" />
+                  </div>
+                ))}
+              </div>
+            ) : programs.length === 0 ? (
+              <div className="rounded-xl border border-dashed border-border bg-card p-10 text-center">
+                <div className="mx-auto grid h-10 w-10 place-items-center rounded-full bg-secondary text-muted-foreground">
+                  <Search className="h-5 w-5" />
                 </div>
-                <div className="mt-6 grid h-12 w-12 place-items-center rounded-lg bg-primary text-primary-foreground">
-                  <ProgramIcon className="h-6 w-6" />
-                </div>
-                <h3 className="mt-5 font-display text-xl font-semibold">{p.title}</h3>
-                <p className="mt-2 flex-1 text-sm text-muted-foreground">{p.desc}</p>
-                <div className="mt-6 flex items-center justify-between border-t border-border pt-4 text-sm">
-                  <span className="text-muted-foreground">{p.level}</span>
-                  <span className="inline-flex items-center gap-1 font-medium text-foreground group-hover:text-primary">
-                    Start <ArrowRight className="h-4 w-4" />
-                  </span>
-                </div>
-              </article>
-            );
-          })}
-        </div>
+                <p className="mt-3 font-display text-base font-semibold">No programs in this category yet</p>
+                <button onClick={() => setActive("All")} className="mt-3 text-sm font-medium text-primary hover:underline">
+                  View all programs →
+                </button>
+              </div>
+            ) : (
+              <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+                {programs.map((p) => {
+                  const ProgramIcon = getIcon(p.icon);
+                  return (
+                    <article key={p.slug} className="relative group hover-lift flex flex-col rounded-xl border border-border bg-card p-6">
+                      <AdminCardActions entity="program" itemId={p._id} queryKey={["programs", active]} onEdit={() => setEditProgram(p)} />
+                      <div className="flex items-center justify-between">
+                        <span className="rounded-full bg-secondary px-2.5 py-1 text-xs font-medium">{p.tag}</span>
+                        <span className="text-xs text-muted-foreground">{p.duration}</span>
+                      </div>
+                      <div className="mt-6 grid h-12 w-12 place-items-center rounded-lg bg-primary text-primary-foreground">
+                        <ProgramIcon className="h-6 w-6" />
+                      </div>
+                      <h3 className="mt-5 font-display text-xl font-semibold">{p.title}</h3>
+                      <p className="mt-2 flex-1 text-sm text-muted-foreground">{p.desc}</p>
+                      <div className="mt-6 flex items-center justify-between border-t border-border pt-4 text-sm">
+                        <span className="text-muted-foreground">{p.level}</span>
+                        <span className="inline-flex items-center gap-1 font-medium text-foreground group-hover:text-primary">
+                          Start <ArrowRight className="h-4 w-4" />
+                        </span>
+                      </div>
+                    </article>
+                  );
+                })}
+              </div>
+            )}
+          </section>
+
+          <section className="mt-14">
+            <div className="flex items-center gap-3 mb-5">
+              <h2 className="font-display text-xl font-semibold text-foreground">Live Sessions</h2>
+              {isAdmin && (
+                <button onClick={() => setCreateTarget("session")} className="grid h-6 w-6 place-items-center rounded-md bg-primary text-primary-foreground text-xs hover:bg-primary/90" title="Add session">
+                  <Plus className="h-3.5 w-3.5" />
+                </button>
+              )}
+            </div>
+            {sLoad ? (
+              <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+                {Array.from({ length: 3 }).map((_, i) => (
+                  <Skeleton key={i} className="h-44 rounded-xl" />
+                ))}
+              </div>
+            ) : sessions.length === 0 ? (
+              <div className="rounded-xl border border-dashed border-border bg-card p-10 text-center">
+                <Calendar className="mx-auto h-7 w-7 text-muted-foreground" />
+                <p className="mt-3 font-display text-base font-semibold text-foreground">No sessions scheduled yet</p>
+                <p className="mt-1 text-sm text-muted-foreground">Check back soon for upcoming live sessions.</p>
+              </div>
+            ) : (
+              <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+                {sessions.map((s) => (
+                  <article key={s._id} className="relative group rounded-xl border border-border bg-card p-6 hover-lift">
+                    <AdminCardActions entity="session" itemId={s._id} queryKey={["sessions"]} onEdit={() => setEditSession(s)} />
+                    {s.isLive && (
+                      <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald/10 px-2.5 py-1 text-xs font-medium text-emerald mb-3">
+                        <span className="h-1.5 w-1.5 rounded-full bg-emerald animate-pulse" />
+                        Live now
+                      </span>
+                    )}
+                    <h3 className="font-display text-lg font-semibold text-foreground mt-1">{s.title}</h3>
+                    <p className="mt-1 text-xs text-muted-foreground">{s.programSlug}</p>
+                    <p className="mt-2 text-sm text-muted-foreground line-clamp-2">{s.description}</p>
+                    <div className="mt-4 flex flex-wrap gap-3 text-xs text-muted-foreground">
+                      <span className="flex items-center gap-1"><User className="h-3.5 w-3.5" />{s.coach}</span>
+                      <span className="flex items-center gap-1"><Calendar className="h-3.5 w-3.5" />{new Date(s.scheduledAt).toLocaleDateString("en-IN", { weekday: "short", day: "numeric", month: "short" })}</span>
+                      <span className="flex items-center gap-1"><Clock className="h-3.5 w-3.5" />{s.durationMin} min</span>
+                    </div>
+                    {s.joinLink && (
+                      <div className="mt-4 flex gap-2">
+                        <Button asChild size="sm" className="bg-primary text-primary-foreground hover:bg-primary/90">
+                          <a href={s.joinLink} target="_blank" rel="noopener noreferrer">Join <ExternalLink className="ml-1 h-3.5 w-3.5" /></a>
+                        </Button>
+                        <Button variant="outline" size="sm" onClick={() => copyLink(s.joinLink)}><Copy className="h-3.5 w-3.5" /></Button>
+                      </div>
+                    )}
+                  </article>
+                ))}
+              </div>
+            )}
+          </section>
+
+          <section className="mt-14">
+            <div className="flex items-center gap-3 mb-5">
+              <h2 className="font-display text-xl font-semibold text-foreground">Upcoming Events</h2>
+              {isAdmin && (
+                <button onClick={() => setCreateTarget("event")} className="grid h-6 w-6 place-items-center rounded-md bg-primary text-primary-foreground text-xs hover:bg-primary/90" title="Add event">
+                  <Plus className="h-3.5 w-3.5" />
+                </button>
+              )}
+            </div>
+            {eLoad ? (
+              <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+                {Array.from({ length: 3 }).map((_, i) => <Skeleton key={i} className="h-44 rounded-xl" />)}
+              </div>
+            ) : events.length === 0 ? (
+              <div className="rounded-xl border border-dashed border-border bg-card p-10 text-center">
+                <Calendar className="mx-auto h-7 w-7 text-muted-foreground" />
+                <p className="mt-3 font-display text-base font-semibold text-foreground">No upcoming events</p>
+                <p className="mt-1 text-sm text-muted-foreground">Check back soon.</p>
+              </div>
+            ) : (
+              <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+                {events.map((e) => (
+                  <article key={e._id} className="relative group rounded-xl border border-border bg-card p-6 hover-lift">
+                    <AdminCardActions entity="event" itemId={e._id} queryKey={["events", "upcoming"]} onEdit={() => setEditEvent(e)} />
+                    <div className="flex gap-1.5 flex-wrap">
+                      <span className="inline-flex items-center gap-1.5 rounded-full bg-secondary px-2.5 py-1 text-xs font-medium text-muted-foreground capitalize">{e.type}</span>
+                      <span className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-medium ${e.mode === "online" ? "bg-blue-500/10 text-blue-500" : "bg-orange/10 text-orange"}`}>
+                        {e.mode === "online" ? "Online" : "Offline"}
+                      </span>
+                    </div>
+                    <h3 className="mt-3 font-display text-lg font-semibold text-foreground">{e.title}</h3>
+                    <p className="mt-1 text-sm text-muted-foreground line-clamp-2">{e.description}</p>
+                    <div className="mt-4 flex flex-wrap gap-3 text-xs text-muted-foreground">
+                      <span className="flex items-center gap-1"><Calendar className="h-3.5 w-3.5" />{new Date(e.scheduledAt).toLocaleDateString("en-IN", { weekday: "short", day: "numeric", month: "short" })}</span>
+                      <span className="flex items-center gap-1"><Clock className="h-3.5 w-3.5" />{e.durationMin} min</span>
+                    </div>
+                    {e.mode === "online" && e.joinLink ? (
+                      <div className="mt-4 flex gap-2">
+                        <Button asChild size="sm" className="bg-primary text-primary-foreground hover:bg-primary/90">
+                          <a href={e.joinLink} target="_blank" rel="noopener noreferrer">Join <ExternalLink className="ml-1 h-3.5 w-3.5" /></a>
+                        </Button>
+                        <Button variant="outline" size="sm" onClick={() => copyLink(e.joinLink)}><Copy className="h-3.5 w-3.5" /></Button>
+                      </div>
+                    ) : e.mode === "offline" && e.place ? (
+                      <div className="mt-4 flex items-center gap-1.5 text-sm text-muted-foreground">
+                        <span>📍</span>
+                        <span>{e.place}</span>
+                      </div>
+                    ) : null}
+                  </article>
+                ))}
+              </div>
+            )}
+          </section>
+        </>
+      )}
+
+      {tab === "completed" && (
+        <section className="mt-10">
+          <div className="flex items-center gap-3 mb-5">
+            <h2 className="font-display text-xl font-semibold text-foreground">Completed Events</h2>
+            {isAdmin && (
+              <button onClick={() => setCreateTarget("event")} className="grid h-6 w-6 place-items-center rounded-md bg-primary text-primary-foreground text-xs hover:bg-primary/90" title="Add event">
+                <Plus className="h-3.5 w-3.5" />
+              </button>
+            )}
+          </div>
+          {eLoad ? (
+            <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+              {Array.from({ length: 3 }).map((_, i) => <Skeleton key={i} className="h-44 rounded-xl" />)}
+            </div>
+          ) : events.length === 0 ? (
+            <div className="rounded-xl border border-dashed border-border bg-card p-12 text-center">
+              <Calendar className="mx-auto h-8 w-8 text-muted-foreground" />
+              <p className="mt-4 font-display text-lg font-semibold text-foreground">No completed events</p>
+              <p className="mt-2 text-sm text-muted-foreground">Completed event recordings will appear here.</p>
+            </div>
+          ) : (
+            <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+              {events.map((e) => (
+                <article key={e._id} className="relative group rounded-xl border border-border bg-card p-6 hover-lift">
+                  <AdminCardActions entity="event" itemId={e._id} queryKey={["events", "completed"]} onEdit={() => setEditEvent(e)} />
+                  <div className="flex gap-1.5 flex-wrap">
+                    <span className="inline-flex items-center gap-1.5 rounded-full bg-secondary px-2.5 py-1 text-xs font-medium text-muted-foreground capitalize">{e.type}</span>
+                    <span className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-medium ${e.mode === "online" ? "bg-blue-500/10 text-blue-500" : "bg-orange/10 text-orange"}`}>
+                      {e.mode === "online" ? "Online" : "Offline"}
+                    </span>
+                  </div>
+                  <h3 className="mt-3 font-display text-lg font-semibold text-foreground">{e.title}</h3>
+                  <p className="mt-1 text-sm text-muted-foreground line-clamp-2">{e.description}</p>
+                  <div className="mt-4 flex flex-wrap gap-3 text-xs text-muted-foreground">
+                    <span className="flex items-center gap-1"><Calendar className="h-3.5 w-3.5" />{new Date(e.scheduledAt).toLocaleDateString("en-IN", { weekday: "short", day: "numeric", month: "short" })}</span>
+                    <span className="flex items-center gap-1"><Clock className="h-3.5 w-3.5" />{e.durationMin} min</span>
+                  </div>
+                  {e.recordingUrl && (
+                    <div className="mt-4 flex gap-2">
+                      <Button asChild size="sm" className={isYouTube(e.recordingUrl) ? "bg-orange text-orange-foreground hover:bg-orange/90" : "bg-primary text-primary-foreground hover:bg-primary/90"}>
+                        <a href={e.recordingUrl} target="_blank" rel="noopener noreferrer">
+                          {isYouTube(e.recordingUrl) ? <><Youtube className="mr-1 h-3.5 w-3.5" /> Watch</> : "Recording"}
+                        </a>
+                      </Button>
+                      <Button variant="outline" size="sm" onClick={() => copyLink(e.recordingUrl)}><Copy className="h-3.5 w-3.5" /></Button>
+                    </div>
+                  )}
+                  {e.mode === "offline" && e.place && (
+                    <div className="mt-3 flex items-center gap-1.5 text-sm text-muted-foreground">
+                      <span>📍</span>
+                      <span>{e.place}</span>
+                    </div>
+                  )}
+                </article>
+              ))}
+            </div>
+          )}
+        </section>
       )}
 
       <div className="mt-16 flex flex-wrap items-center justify-between gap-4 rounded-xl border border-border bg-secondary/50 p-6">
@@ -140,6 +340,13 @@ function ProgramsPage() {
           <Link to="/signup">Start free week</Link>
         </Button>
       </div>
+
+      {createTarget === "program" && <ProgramFormDialog program={null} onClose={() => setCreateTarget(null)} />}
+      {createTarget === "session" && <SessionFormDialog session={null} onClose={() => setCreateTarget(null)} />}
+      {createTarget === "event" && <EventFormDialog event={null} onClose={() => setCreateTarget(null)} />}
+      {editProgram && <ProgramFormDialog program={editProgram} onClose={() => setEditProgram(null)} />}
+      {editSession && <SessionFormDialog session={editSession} onClose={() => setEditSession(null)} />}
+      {editEvent && <EventFormDialog event={editEvent} onClose={() => setEditEvent(null)} />}
     </div>
   );
 }

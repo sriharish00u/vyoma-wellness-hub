@@ -1,4 +1,4 @@
-import { api, type AuthUser } from "./api";
+import { type AuthUser } from "./api";
 
 const TOKEN_KEY = "vyoma_token";
 const USER_KEY = "vyoma_user";
@@ -18,4 +18,14 @@ export const auth = {
     localStorage.removeItem(USER_KEY);
   },
   isLoggedIn: () => !!localStorage.getItem(TOKEN_KEY),
+  isAdmin: (): boolean => {
+    const raw = localStorage.getItem(USER_KEY);
+    if (!raw) return false;
+    try {
+      const user: AuthUser = JSON.parse(raw);
+      return user.role === "admin";
+    } catch {
+      return false;
+    }
+  },
 };

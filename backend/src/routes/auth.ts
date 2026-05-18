@@ -1,6 +1,7 @@
 import { Router } from "express";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
+import rateLimit from "express-rate-limit";
 import { User } from "../models/User";
 import { registerSchema, loginSchema } from "../schemas";
 import { verifyToken } from "../middleware/auth";
@@ -9,7 +10,15 @@ const router = Router();
 
 const JWT_SECRET = process.env.JWT_SECRET ?? "fallback_secret";
 
-router.post("/register", async (req, res, next) => {
+const authLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 20,
+  message: { error: "Too many requests, please try again later." },
+  standardHeaders: true,
+  legacyHeaders: false,
+});
+
+router.post("/register", authLimiter, async (req, res, next) => {
   try {
     const data = registerSchema.parse(req.body);
     const existing = await User.findOne({ email: data.email });
@@ -19,11 +28,11 @@ router.post("/register", async (req, res, next) => {
       throw err;
     }
     const hashed = await bcrypt.hash(data.password, 10);
-    const user = await User.create({ name: data.name, email: data.email, password: hashed });
-    const token = jwt.sign({ userId: user._id }, JWT_SECRET, { expiresIn: "7d" });
+    const user = await User.create({ name: data.name, email: data.email, password: hashed, role: "user" });
+    const token = jwt.sign({ userId: user._id, role: user.role }, JWT_SECRET, { expiresIn: "7d" });
     res.status(201).json({
       token,
-      user: { id: user._id, name: user.name, email: user.email, plan: user.plan, streak: user.streak },
+      user: { id: user._id, name: user.name, email: user.email, role: user.role, plan: user.plan, streak: user.streak, isVerified: user.isVerified },
     });
   } catch (err: any) {
     if (err.name === "ZodError") {
@@ -34,19 +43,29 @@ router.post("/register", async (req, res, next) => {
   }
 });
 
-router.post("/login", async (req, res, next) => {
+router.post("/login", authLimiter, async (req, res, next) => {
   try {
     const data = loginSchema.parse(req.body);
     const user = await User.findOne({ email: data.email }).select("+password");
-    if (!user || !(await bcrypt.compare(data.password, user.password))) {
+    if (!user || !user.password) {
       const err = new Error("Invalid email or password") as any;
       err.status = 401;
       throw err;
     }
-    const token = jwt.sign({ userId: user._id }, JWT_SECRET, { expiresIn: "7d" });
+    if (user.isBanned) {
+      res.status(403).json({ error: "Your account has been suspended." });
+      return;
+    }
+    const passwordMatch = await bcrypt.compare(data.password, user.password);
+    if (!passwordMatch) {
+      const err = new Error("Invalid email or password") as any;
+      err.status = 401;
+      throw err;
+    }
+    const token = jwt.sign({ userId: user._id, role: user.role }, JWT_SECRET, { expiresIn: "7d" });
     res.json({
       token,
-      user: { id: user._id, name: user.name, email: user.email, plan: user.plan, streak: user.streak },
+      user: { id: user._id, name: user.name, email: user.email, role: user.role, plan: user.plan, streak: user.streak, isVerified: user.isVerified },
     });
   } catch (err: any) {
     if (err.name === "ZodError") {
@@ -59,13 +78,23 @@ router.post("/login", async (req, res, next) => {
 
 router.get("/me", verifyToken, async (req, res, next) => {
   try {
+    res.setHeader("Cache-Control", "no-store");
     const user = await User.findById(req.user!.userId);
     if (!user) {
       const err = new Error("User not found") as any;
       err.status = 404;
       throw err;
     }
-    res.json({ id: user._id, name: user.name, email: user.email, plan: user.plan, streak: user.streak, sessionsCompleted: user.sessionsCompleted });
+    res.json({
+      id: user._id,
+      name: user.name,
+      email: user.email,
+      role: user.role,
+      plan: user.plan,
+      streak: user.streak,
+      sessionsCompleted: user.sessionsCompleted,
+      isVerified: user.isVerified,
+    });
   } catch (err) {
     next(err);
   }

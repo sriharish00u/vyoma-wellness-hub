@@ -1,7 +1,11 @@
-import { Link } from "@tanstack/react-router";
+import { Link, useRouterState } from "@tanstack/react-router";
 import { Logo } from "./Logo";
 
 export function Footer() {
+  const path = useRouterState({ select: (s) => s.location.pathname });
+
+  if (path.startsWith("/admin")) return null;
+
   return (
     <footer className="mt-24 border-t border-border bg-secondary/40">
       <div className="mx-auto grid max-w-7xl gap-10 px-4 py-14 sm:px-6 lg:grid-cols-4 lg:px-8">
