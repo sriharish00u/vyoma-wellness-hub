@@ -14,14 +14,23 @@ import quoteRoutes from "./routes/quotes.js";
 
 const app = express();
 const PORT = process.env.PORT ?? 3001;
-const CLIENT_ORIGINS = (process.env.CLIENT_ORIGIN ?? "http://localhost:5173,https://vyoma-wellness-hub.vercel.app").split(",");
+const CLIENT_ORIGINS = (
+  process.env.CLIENT_ORIGIN ??
+  "http://localhost:5173,https://localhost,capacitor://localhost,https://vyoma-wellness-hub.vercel.app"
+).split(",");
 
 const corsOptions = {
-  origin: CLIENT_ORIGINS,
+  origin: function (origin: string | undefined, callback: any) {
+    if (!origin || CLIENT_ORIGINS.includes(origin)) {
+      callback(null, true);
+    } else {
+      console.log("Blocked by CORS:", origin);
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
   credentials: true,
   optionsSuccessStatus: 200,
 };
-
 app.use(cors(corsOptions));
 app.options("*", cors(corsOptions));
 app.use(express.json());
