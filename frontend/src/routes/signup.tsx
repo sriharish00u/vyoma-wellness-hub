@@ -12,7 +12,7 @@ import { api } from "@/lib/api";
 import { auth } from "@/lib/auth";
 
 export const Route = createFileRoute("/signup")({
-  head: () => ({ meta: [{ title: "Get started — Vyoma Wellness" }, { name: "description", content: "Create your Vyoma Wellness account." }] }),
+  head: () => ({ meta: [{ title: "Get started — Mivora Academy" }, { name: "description", content: "Create your Mivora Academy account." }] }),
   component: SignupPage,
 });
 

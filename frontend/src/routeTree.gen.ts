@@ -9,8 +9,11 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as TechnicalServicesRouteImport } from './routes/technical-services'
 import { Route as SignupRouteImport } from './routes/signup'
 import { Route as PricingRouteImport } from './routes/pricing'
+import { Route as PhysicalWellnessRouteImport } from './routes/physical-wellness'
+import { Route as MentalWellnessRouteImport } from './routes/mental-wellness'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as EventsRouteImport } from './routes/events'
 import { Route as ContactRouteImport } from './routes/contact'
@@ -20,6 +23,11 @@ import { Route as AdminIndexRouteImport } from './routes/admin/index'
 import { Route as AdminUsersRouteImport } from './routes/admin/users'
 import { Route as AdminContactsRouteImport } from './routes/admin/contacts'
 
+const TechnicalServicesRoute = TechnicalServicesRouteImport.update({
+  id: '/technical-services',
+  path: '/technical-services',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const SignupRoute = SignupRouteImport.update({
   id: '/signup',
   path: '/signup',
@@ -28,6 +36,16 @@ const SignupRoute = SignupRouteImport.update({
 const PricingRoute = PricingRouteImport.update({
   id: '/pricing',
   path: '/pricing',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PhysicalWellnessRoute = PhysicalWellnessRouteImport.update({
+  id: '/physical-wellness',
+  path: '/physical-wellness',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MentalWellnessRoute = MentalWellnessRouteImport.update({
+  id: '/mental-wellness',
+  path: '/mental-wellness',
   getParentRoute: () => rootRouteImport,
 } as any)
 const LoginRoute = LoginRouteImport.update({
@@ -77,8 +95,11 @@ export interface FileRoutesByFullPath {
   '/contact': typeof ContactRoute
   '/events': typeof EventsRoute
   '/login': typeof LoginRoute
+  '/mental-wellness': typeof MentalWellnessRoute
+  '/physical-wellness': typeof PhysicalWellnessRoute
   '/pricing': typeof PricingRoute
   '/signup': typeof SignupRoute
+  '/technical-services': typeof TechnicalServicesRoute
   '/admin/contacts': typeof AdminContactsRoute
   '/admin/users': typeof AdminUsersRoute
   '/admin/': typeof AdminIndexRoute
@@ -89,8 +110,11 @@ export interface FileRoutesByTo {
   '/contact': typeof ContactRoute
   '/events': typeof EventsRoute
   '/login': typeof LoginRoute
+  '/mental-wellness': typeof MentalWellnessRoute
+  '/physical-wellness': typeof PhysicalWellnessRoute
   '/pricing': typeof PricingRoute
   '/signup': typeof SignupRoute
+  '/technical-services': typeof TechnicalServicesRoute
   '/admin/contacts': typeof AdminContactsRoute
   '/admin/users': typeof AdminUsersRoute
   '/admin': typeof AdminIndexRoute
@@ -102,8 +126,11 @@ export interface FileRoutesById {
   '/contact': typeof ContactRoute
   '/events': typeof EventsRoute
   '/login': typeof LoginRoute
+  '/mental-wellness': typeof MentalWellnessRoute
+  '/physical-wellness': typeof PhysicalWellnessRoute
   '/pricing': typeof PricingRoute
   '/signup': typeof SignupRoute
+  '/technical-services': typeof TechnicalServicesRoute
   '/admin/contacts': typeof AdminContactsRoute
   '/admin/users': typeof AdminUsersRoute
   '/admin/': typeof AdminIndexRoute
@@ -116,8 +143,11 @@ export interface FileRouteTypes {
     | '/contact'
     | '/events'
     | '/login'
+    | '/mental-wellness'
+    | '/physical-wellness'
     | '/pricing'
     | '/signup'
+    | '/technical-services'
     | '/admin/contacts'
     | '/admin/users'
     | '/admin/'
@@ -128,8 +158,11 @@ export interface FileRouteTypes {
     | '/contact'
     | '/events'
     | '/login'
+    | '/mental-wellness'
+    | '/physical-wellness'
     | '/pricing'
     | '/signup'
+    | '/technical-services'
     | '/admin/contacts'
     | '/admin/users'
     | '/admin'
@@ -140,8 +173,11 @@ export interface FileRouteTypes {
     | '/contact'
     | '/events'
     | '/login'
+    | '/mental-wellness'
+    | '/physical-wellness'
     | '/pricing'
     | '/signup'
+    | '/technical-services'
     | '/admin/contacts'
     | '/admin/users'
     | '/admin/'
@@ -153,8 +189,11 @@ export interface RootRouteChildren {
   ContactRoute: typeof ContactRoute
   EventsRoute: typeof EventsRoute
   LoginRoute: typeof LoginRoute
+  MentalWellnessRoute: typeof MentalWellnessRoute
+  PhysicalWellnessRoute: typeof PhysicalWellnessRoute
   PricingRoute: typeof PricingRoute
   SignupRoute: typeof SignupRoute
+  TechnicalServicesRoute: typeof TechnicalServicesRoute
   AdminContactsRoute: typeof AdminContactsRoute
   AdminUsersRoute: typeof AdminUsersRoute
   AdminIndexRoute: typeof AdminIndexRoute
@@ -162,6 +201,13 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/technical-services': {
+      id: '/technical-services'
+      path: '/technical-services'
+      fullPath: '/technical-services'
+      preLoaderRoute: typeof TechnicalServicesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/signup': {
       id: '/signup'
       path: '/signup'
@@ -174,6 +220,20 @@ declare module '@tanstack/react-router' {
       path: '/pricing'
       fullPath: '/pricing'
       preLoaderRoute: typeof PricingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/physical-wellness': {
+      id: '/physical-wellness'
+      path: '/physical-wellness'
+      fullPath: '/physical-wellness'
+      preLoaderRoute: typeof PhysicalWellnessRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/mental-wellness': {
+      id: '/mental-wellness'
+      path: '/mental-wellness'
+      fullPath: '/mental-wellness'
+      preLoaderRoute: typeof MentalWellnessRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/login': {
@@ -241,8 +301,11 @@ const rootRouteChildren: RootRouteChildren = {
   ContactRoute: ContactRoute,
   EventsRoute: EventsRoute,
   LoginRoute: LoginRoute,
+  MentalWellnessRoute: MentalWellnessRoute,
+  PhysicalWellnessRoute: PhysicalWellnessRoute,
   PricingRoute: PricingRoute,
   SignupRoute: SignupRoute,
+  TechnicalServicesRoute: TechnicalServicesRoute,
   AdminContactsRoute: AdminContactsRoute,
   AdminUsersRoute: AdminUsersRoute,
   AdminIndexRoute: AdminIndexRoute,

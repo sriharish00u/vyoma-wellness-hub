@@ -19,7 +19,7 @@ function prompt(question: string): Promise<string> {
 }
 
 async function makeAdmin() {
-  console.log("\n🔐 Vyoma — Make Admin\n");
+  console.log("\n🔐 Mivora Academy — Make Admin\n");
 
   await mongoose.connect(uri);
   console.log("✅ Connected to MongoDB\n");

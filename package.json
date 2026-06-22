@@ -1,5 +1,5 @@
 {
-  "name": "vyoma-wellness",
+  "name": "mivora-academy",
   "private": true,
   "scripts": {
     "dev": "concurrently -n backend,frontend -c blue,green \"cd backend && npm run dev\" \"cd frontend && npm run dev\"",

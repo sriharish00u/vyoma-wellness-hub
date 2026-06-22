@@ -11,7 +11,7 @@ import { api } from "@/lib/api";
 import { auth } from "@/lib/auth";
 
 export const Route = createFileRoute("/login")({
-  head: () => ({ meta: [{ title: "Login — Vyoma Wellness" }, { name: "description", content: "Login to Vyoma Wellness." }] }),
+  head: () => ({ meta: [{ title: "Login — Mivora Academy" }, { name: "description", content: "Login to Mivora Academy." }] }),
   component: LoginPage,
 });
 
@@ -76,7 +76,7 @@ function LoginPage() {
           </Button>
         </form>
         <p className="mt-6 text-center text-sm text-muted-foreground">
-          New to Vyoma? <Link to="/signup" className="font-medium text-foreground hover:text-primary">Create an account</Link>
+          New to Mivora Academy? <Link to="/signup" className="font-medium text-foreground hover:text-primary">Create an account</Link>
         </p>
       </div>
     </div>

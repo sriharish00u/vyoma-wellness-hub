@@ -13,8 +13,8 @@ import { auth } from "@/lib/auth";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Vyoma Wellness — Calm. Disciplined. Daily." },
-      { name: "description", content: "Modern wellness academy. Daily yoga, fitness, breathwork and motivation in one calm, premium platform." },
+      { title: "Mivora Academy — Calm. Disciplined. Daily." },
+      { name: "description", content: "Mivora Academy — Physical wellness, mental wellness & technical services for holistic growth." },
     ],
   }),
   component: Index,
@@ -104,8 +104,8 @@ function Index() {
               <span className="text-emerald">Daily practice.</span>
             </h1>
             <p className="mt-6 max-w-xl text-base leading-relaxed text-muted-foreground sm:text-lg">
-              Vyoma Wellness is a modern academy for yoga, fitness, breathwork and motivation —
-              built around daily live sessions and quiet, lasting habits.
+              Mivora Academy is a holistic platform offering physical wellness, mental wellness,
+              and technical services — built for growth in every dimension of life.
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
               <Button asChild size="lg" className="bg-primary text-primary-foreground hover:bg-primary/90">
@@ -221,7 +221,7 @@ function Index() {
       {/* FEATURES */}
       <section className="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8">
         <div className="max-w-2xl">
-          <p className="text-xs font-semibold uppercase tracking-widest text-emerald">Why Vyoma</p>
+          <p className="text-xs font-semibold uppercase tracking-widest text-emerald">Why Mivora</p>
           <h2 className="mt-3 font-display text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
             A calm, structured way to show up every day.
           </h2>
@@ -328,7 +328,7 @@ function Index() {
               <Textarea
                 value={quoteText}
                 onChange={(e) => setQuoteText(e.target.value)}
-                placeholder="What has Vyoma Wellness done for you? (10-500 characters)"
+                placeholder="What has Mivora Academy done for you? (10-500 characters)"
                 rows={2}
                 className="resize-none"
                 maxLength={500}

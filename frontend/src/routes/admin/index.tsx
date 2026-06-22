@@ -7,7 +7,7 @@ import { auth } from "@/lib/auth";
 import { Button } from "@/components/ui/button";
 
 export const Route = createFileRoute("/admin/")({
-  head: () => ({ meta: [{ title: "Admin — Vyoma Wellness" }] }),
+  head: () => ({ meta: [{ title: "Admin — Mivora Academy" }] }),
   component: AdminLayout,
 });
 

@@ -16,7 +16,7 @@ const app = express();
 const PORT = process.env.PORT ?? 3001;
 const CLIENT_ORIGINS = (
   process.env.CLIENT_ORIGIN ??
-  "http://localhost:5173,https://localhost,capacitor://localhost,https://vyoma-wellness-hub.vercel.app"
+  "http://localhost:5173,https://localhost,capacitor://localhost,https://mivora-academy.vercel.app"
 ).split(",");
 
 const corsOptions = {
@@ -36,7 +36,7 @@ app.options("*", cors(corsOptions));
 app.use(express.json());
 
 app.get("/", (_req, res) => {
-  res.json({ success: true, message: "Vyoma API running" });
+  res.json({ success: true, message: "Mivora Academy API running" });
 });
 
 app.get("/health", (_req, res) => {

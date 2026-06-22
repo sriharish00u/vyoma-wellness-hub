@@ -19,7 +19,7 @@ function prompt(question: string): Promise<string> {
 }
 
 async function removeUser() {
-  console.log("\n🗑️  Vyoma — Remove User\n");
+  console.log("\n🗑️  Mivora Academy — Remove User\n");
 
   await mongoose.connect(uri);
   console.log("✅ Connected to MongoDB\n");

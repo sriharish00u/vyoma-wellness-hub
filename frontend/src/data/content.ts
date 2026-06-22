@@ -17,7 +17,7 @@ export const features = [
 ];
 
 export const testimonials = [
-  { name: "Aarti S.", role: "Member, 6 months", quote: "Vyoma helped me build a 90-day yoga streak. The classes feel calm, never rushed." },
+  { name: "Aarti S.", role: "Member, 6 months", quote: "Mivora Academy helped me build a 90-day yoga streak. The classes feel calm, never rushed." },
   { name: "Rohan M.", role: "Member, 1 year", quote: "Finally a fitness platform that doesn't shout at me. Just steady, daily progress." },
   { name: "Meera K.", role: "Member, 4 months", quote: "Breathwork has changed my sleep. The coaches are patient and clear." },
 ];

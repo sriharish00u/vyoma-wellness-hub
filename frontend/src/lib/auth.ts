@@ -1,7 +1,7 @@
 import { type AuthUser } from "./api";
 
-const TOKEN_KEY = "vyoma_token";
-const USER_KEY = "vyoma_user";
+const TOKEN_KEY = "mivora_token";
+const USER_KEY = "mivora_user";
 
 export const auth = {
   getToken: () => localStorage.getItem(TOKEN_KEY),
