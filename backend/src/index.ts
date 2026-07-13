@@ -11,6 +11,7 @@ import sessionRoutes from "./routes/sessions.js";
 import eventRoutes from "./routes/events.js";
 import settingsRoutes from "./routes/settings.js";
 import quoteRoutes from "./routes/quotes.js";
+import pushRoutes from "./routes/push.js";
 
 const app = express();
 const PORT = process.env.PORT ?? 3001;
@@ -51,6 +52,7 @@ app.use("/api/sessions", sessionRoutes);
 app.use("/api/events", eventRoutes);
 app.use("/api/settings", settingsRoutes);
 app.use("/api/quotes", quoteRoutes);
+app.use("/api/push", pushRoutes);
 
 app.use(errorHandler);
 

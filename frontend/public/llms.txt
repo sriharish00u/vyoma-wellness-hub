@@ -1,0 +1,35 @@
+# Mivora Academy
+> A holistic wellness platform for physical, mental, and technical growth.
+
+## About
+Mivora Academy is an Indian wellness platform offering yoga, meditation, fitness, life skills, counseling, and technical services. Founded in 2022, it serves thousands of members with daily guided sessions, certified coaches, and a community-driven approach to holistic growth.
+
+## What We Offer
+- **Physical Wellness**: Yoga, meditation, breathwork, holistic fitness — guided sessions from 10–35 minutes.
+- **Mental Wellness**: Life skills training, professional counseling, mindfulness & reflection exercises.
+- **Technical Services**: Website creation, app development, social media maintenance, digital marketing.
+
+## Pricing
+- Starter: Free forever (3 sessions/week, library preview, community access)
+- Member: ₹499/month (daily live sessions, full library, habit tracker, coach Q&A)
+- Annual: ₹3,999/year (everything in Member + two months free, priority support)
+
+## Philosophy
+Growth is built through consistency, not intensity. Short daily sessions (10–35 min) that fit real schedules. No hype, no flashy gimmicks — just disciplined daily practice with coaches who care.
+
+## Contact
+- Website: https://mivora-academy.vercel.app
+- Email: mivoraacedamy@gmail.com
+- Instagram: https://www.instagram.com/mivora_academy
+- Facebook: https://www.facebook.com/people/Mivora-Academy/61591345331704/
+- LinkedIn: https://in.linkedin.com/in/mivora-academy-645888419
+
+## Pages
+- Home: https://mivora-academy.vercel.app/
+- About: https://mivora-academy.vercel.app/about
+- Pricing: https://mivora-academy.vercel.app/pricing
+- Events: https://mivora-academy.vercel.app/events
+- Physical Wellness: https://mivora-academy.vercel.app/physical-wellness
+- Mental Wellness: https://mivora-academy.vercel.app/mental-wellness
+- Technical Services: https://mivora-academy.vercel.app/technical-services
+- Contact: https://mivora-academy.vercel.app/contact

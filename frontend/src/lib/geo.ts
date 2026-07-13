@@ -1,0 +1,157 @@
+import { SITE_URL, SITE_NAME, SOCIAL_LINKS } from "./seo";
+
+export function getLLMsTxtContent() {
+  return `# ${SITE_NAME}
+> A holistic wellness platform for physical, mental, and technical growth.
+
+## About
+${SITE_NAME} is an Indian wellness platform offering yoga, meditation, fitness, life skills, counseling, and technical services. Founded in 2022, it serves thousands of members with daily guided sessions, certified coaches, and a community-driven approach to holistic growth.
+
+## What We Offer
+- **Physical Wellness**: Yoga, meditation, breathwork, holistic fitness — guided sessions from 10–35 minutes.
+- **Mental Wellness**: Life skills training, professional counseling, mindfulness & reflection exercises.
+- **Technical Services**: Website creation, app development, social media maintenance, digital marketing.
+
+## Pricing
+- Starter: Free forever (3 sessions/week, library preview, community access)
+- Member: ₹499/month (daily live sessions, full library, habit tracker, coach Q&A)
+- Annual: ₹3,999/year (everything in Member + two months free, priority support)
+
+## Philosophy
+Growth is built through consistency, not intensity. Short daily sessions (10–35 min) that fit real schedules. No hype, no flashy gimmicks — just disciplined daily practice with coaches who care.
+
+## Contact
+- Website: ${SITE_URL}
+- Email: mivoraacedamy@gmail.com
+- Instagram: ${SOCIAL_LINKS.instagram}
+- Facebook: ${SOCIAL_LINKS.facebook}
+- LinkedIn: ${SOCIAL_LINKS.linkedin}
+
+## Pages
+- ${SITE_URL}/ — Home page with overview
+- ${SITE_URL}/about — Our story, values, and approach
+- ${SITE_URL}/pricing — Membership plans and pricing
+- ${SITE_URL}/events — Live events and workshops
+- ${SITE_URL}/physical-wellness — Yoga, meditation, fitness programs
+- ${SITE_URL}/mental-wellness — Life skills, counseling, mindfulness
+- ${SITE_URL}/technical-services — Web, app, marketing services
+- ${SITE_URL}/contact — Get in touch with our team
+`;
+}
+
+export function getLLMsFullTxtContent() {
+  return `# ${SITE_NAME} — Full Content Guide
+
+## Complete Overview
+${SITE_NAME} is a holistic wellness platform based in Bengaluru, India. Founded in 2022, it provides physical wellness (yoga, meditation, fitness), mental wellness (life skills, counseling, mindfulness), and technical services (web development, app development, digital marketing). The platform serves over 5,000 active members with 60+ certified coaches, maintaining a 4.9 average rating.
+
+## Mission
+To provide a calm, structured, and disciplined approach to daily wellness — covering body, mind, and skills — without the noise and hype of typical fitness platforms.
+
+## Core Values
+1. **Calm over loud**: We build slow, lasting practices — not hype.
+2. **Discipline over motivation**: Show up daily. Outcomes follow naturally.
+3. **Care over scale**: Coaches who know your name, not just your stats.
+
+## Physical Wellness Programs
+- **Yoga**: Traditional and modern yoga practices (Hatha, Vinyasa). Builds flexibility, strength, and inner peace. All levels welcome.
+- **Meditation**: Guided sessions to calm the mind, sharpen focus, and cultivate lasting mindfulness.
+- **Holistic Fitness**: Breathwork, mobility drills, and bodyweight routines for functional fitness.
+
+### Physical Wellness Benefits
+- 60% stress reduction reported in 30 days
+- 15-minute minimum session for results
+- 94% of members report better sleep
+- 4.9 average member rating
+
+## Mental Wellness Programs
+- **Life Skills**: Practical skills for resilience, emotional intelligence, communication, and decision-making. Ages 16+.
+- **Counseling**: One-on-one and group sessions with licensed professionals. Complete confidentiality.
+- **Mindfulness & Reflection**: Journaling prompts, guided reflections, and mindfulness exercises.
+
+### Mental Wellness Benefits
+- 85% report reduced anxiety
+- 2x better emotional resilience
+- 90% would recommend to a friend
+- 4.8 average program rating
+
+## Technical Services
+- **Website Creation**: Custom websites with modern frameworks. Responsive, fast, SEO-optimized.
+- **App Development**: Cross-platform mobile apps (React Native, Flutter). iOS and Android.
+- **Social Media Maintenance**: Content creation, scheduling, community engagement, analytics.
+- **Digital Marketing**: SEO, paid advertising (Google, Meta), email marketing, conversion optimization.
+
+### Technical Services Stats
+- 50+ projects delivered
+- 98% client satisfaction
+- 4.9 average rating
+- 3-year average client relationship
+
+## Pricing
+| Plan | Price | Features |
+|------|-------|----------|
+| Starter | Free forever | 3 sessions/week, library preview, community access |
+| Member | ₹499/month | Daily live sessions, full library, habit tracker, coach Q&A |
+| Annual | ₹3,999/year | Everything in Member + two months free, priority support, member events |
+
+All plans include a free week trial with no card required. Cancel anytime.
+
+## Events & Workshops
+- 12+ events per month
+- 200+ average attendees
+- 4.9 average rating
+- 35-minute average duration
+- Types: workshops, challenges, webinars, community sessions
+- Modes: online and offline
+
+## How It Works
+1. Choose your practice (yoga, meditation, fitness, life skills)
+2. Show up daily (10–35 minute guided sessions)
+3. Grow consistently (track streaks, feel progress)
+
+## Community
+- 120,000+ practitioners
+- 1.8M sessions completed
+- 60+ certified coaches
+- 4.9 average rating
+
+## Testimonials
+- "Mivora Academy helped me build a 90-day yoga streak. The classes feel calm, never rushed." — Aarti S., Member, 6 months
+- "Finally a fitness platform that doesn't shout at me. Just steady, daily progress." — Rohan M., Member, 1 year
+- "Breathwork has changed my sleep. The coaches are patient and clear." — Meera K., Member, 4 months
+
+## Key Differentiators
+- Short daily sessions (10–35 min) that fit real schedules
+- Evidence-based program design by certified coaches
+- Personalized progress tracking with habit streaks
+- Supportive community of peers
+- Holistic approach: body, mind, and skills
+- No flashy gimmicks — just consistent growth
+
+## Contact Information
+- Website: ${SITE_URL}
+- Email: mivoraacedamy@gmail.com
+- Support: mivoraacedamy@gmail.com
+- Studio: Bengaluru, India
+- Working hours: Mon–Fri 6AM–8PM IST, Sat 7AM–6PM IST
+- Instagram: ${SOCIAL_LINKS.instagram}
+- Facebook: ${SOCIAL_LINKS.facebook}
+- LinkedIn: ${SOCIAL_LINKS.linkedin}
+
+## Technical Details
+- Platform: React SPA with Vite
+- Backend: Node.js/Express with MongoDB
+- Mobile: Capacitor (Android)
+- Deployment: Vercel
+`;
+}
+
+export function getCitationMeta(pageTitle: string, pageUrl: string) {
+  return {
+    "data-citation-source": SITE_NAME,
+    "data-citation-title": pageTitle,
+    "data-citation-url": `${SITE_URL}${pageUrl}`,
+    "data-citation-date": new Date().toISOString().split("T")[0],
+    "data-citation-language": "en",
+  };
+}

@@ -9,16 +9,49 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { api } from "@/lib/api";
 import { getIcon } from "@/lib/icons";
 import { auth } from "@/lib/auth";
+import { FAQSection } from "@/components/site/FAQSection";
 
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
       { title: "Mivora Academy — Calm. Disciplined. Daily." },
-      { name: "description", content: "Mivora Academy — Physical wellness, mental wellness & technical services for holistic growth." },
+      {
+        name: "description",
+        content:
+          "Mivora Academy — Physical wellness, mental wellness & technical services for holistic growth.",
+      },
     ],
   }),
   component: Index,
 });
+
+const homeFAQs = [
+  {
+    question: "What is Mivora Academy?",
+    answer:
+      "Mivora Academy is a holistic wellness platform offering physical wellness (yoga, meditation, fitness), mental wellness (life skills, counseling, mindfulness), and technical services (web development, app development, digital marketing). Founded in 2022, it serves thousands of members with daily guided sessions and certified coaches.",
+  },
+  {
+    question: "Is Mivora Academy free?",
+    answer:
+      "Yes! The Starter plan is free forever with 3 sessions per week, library preview, and community access. You can also start with a free week of the Member plan — no card required.",
+  },
+  {
+    question: "How do I get started?",
+    answer:
+      "Simply create a free account, choose your practice (yoga, meditation, fitness, or life skills), and show up for daily 10–35 minute guided sessions. Consistency is key — track your streak and watch your progress grow.",
+  },
+  {
+    question: "Do I need prior experience?",
+    answer:
+      "No. All our programs are designed for all levels — from complete beginners to experienced practitioners. Our coaches provide modifications for every body and every level.",
+  },
+  {
+    question: "What makes Mivora Academy different?",
+    answer:
+      "We focus on consistency over intensity. Short daily sessions (10–35 min) that fit real schedules. No flashy gimmicks — just disciplined daily practice with certified coaches who know your name.",
+  },
+];
 
 function Index() {
   const qc = useQueryClient();
@@ -99,17 +132,25 @@ function Index() {
               New cohort starting Monday
             </span>
             <h1 className="mt-6 font-display text-4xl font-bold leading-[1.05] tracking-tight text-foreground sm:text-5xl lg:text-6xl">
-              Calm body.<br />
-              Disciplined mind.<br />
+              Calm body.
+              <br />
+              Disciplined mind.
+              <br />
               <span className="text-emerald">Daily practice.</span>
             </h1>
             <p className="mt-6 max-w-xl text-base leading-relaxed text-muted-foreground sm:text-lg">
-              Mivora Academy is a holistic platform offering physical wellness, mental wellness,
-              and technical services — built for growth in every dimension of life.
+              Mivora Academy is a holistic platform offering physical wellness, mental wellness, and
+              technical services — built for growth in every dimension of life.
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
-              <Button asChild size="lg" className="bg-primary text-primary-foreground hover:bg-primary/90">
-                <Link to="/signup">Get started <ArrowRight className="ml-1 h-4 w-4" /></Link>
+              <Button
+                asChild
+                size="lg"
+                className="bg-primary text-primary-foreground hover:bg-primary/90"
+              >
+                <Link to="/signup">
+                  Get started <ArrowRight className="ml-1 h-4 w-4" />
+                </Link>
               </Button>
               <Button asChild size="lg" variant="outline">
                 <Link to="/events">Browse events</Link>
@@ -132,12 +173,23 @@ function Index() {
                 {latestEvent ? (
                   <>
                     <p className="text-xs font-medium uppercase tracking-widest opacity-70">
-                      {new Date(latestEvent.scheduledAt).toLocaleDateString("en-IN", { weekday: "short", day: "numeric", month: "short" })}
+                      {new Date(latestEvent.scheduledAt).toLocaleDateString("en-IN", {
+                        weekday: "short",
+                        day: "numeric",
+                        month: "short",
+                      })}
                       {latestEvent.status === "live" ? " · Live" : ""}
                     </p>
-                    <p className="mt-3 font-display text-2xl font-bold leading-tight">{latestEvent.title}</p>
+                    <p className="mt-3 font-display text-2xl font-bold leading-tight">
+                      {latestEvent.title}
+                    </p>
                     <p className="mt-1 text-sm opacity-80">
-                      {new Date(latestEvent.scheduledAt).toLocaleTimeString("en-IN", { hour: "2-digit", minute: "2-digit" })} · {latestEvent.durationMin} min · {latestEvent.mode === "online" ? "Online" : "Offline"}
+                      {new Date(latestEvent.scheduledAt).toLocaleTimeString("en-IN", {
+                        hour: "2-digit",
+                        minute: "2-digit",
+                      })}{" "}
+                      · {latestEvent.durationMin} min ·{" "}
+                      {latestEvent.mode === "online" ? "Online" : "Offline"}
                     </p>
                     {latestEvent.status === "live" && (
                       <div className="mt-6 inline-flex items-center gap-2 rounded-md bg-primary-foreground/10 px-3 py-1.5 text-xs font-medium">
@@ -147,29 +199,51 @@ function Index() {
                     )}
                     {latestEvent.status === "upcoming" && latestEvent.joinLink && (
                       <div className="mt-6">
-                        <Button asChild size="sm" className="bg-orange text-orange-foreground hover:bg-orange/90">
-                          <a href={latestEvent.joinLink} target="_blank" rel="noopener noreferrer">Join now</a>
+                        <Button
+                          asChild
+                          size="sm"
+                          className="bg-orange text-orange-foreground hover:bg-orange/90"
+                        >
+                          <a href={latestEvent.joinLink} target="_blank" rel="noopener noreferrer">
+                            Join now
+                          </a>
                         </Button>
                       </div>
                     )}
                   </>
                 ) : (
                   <>
-                    <p className="text-xs font-medium uppercase tracking-widest opacity-70">Today</p>
-                    <p className="mt-3 font-display text-2xl font-bold leading-tight">No upcoming events</p>
+                    <p className="text-xs font-medium uppercase tracking-widest opacity-70">
+                      Today
+                    </p>
+                    <p className="mt-3 font-display text-2xl font-bold leading-tight">
+                      No upcoming events
+                    </p>
                     <p className="mt-1 text-sm opacity-80">Check back soon</p>
                   </>
                 )}
               </div>
               <div className="col-span-2 row-span-3 rounded-2xl bg-emerald p-5 text-emerald-foreground hover-lift">
-                <p className="text-xs font-medium uppercase tracking-widest opacity-80">{loggedIn ? "Streak" : "Since launch"}</p>
+                <p className="text-xs font-medium uppercase tracking-widest opacity-80">
+                  {loggedIn ? "Streak" : "Since launch"}
+                </p>
                 <p className="mt-3 font-display text-4xl font-bold">{streakDisplay}</p>
                 <p className="text-sm opacity-85">{loggedIn ? "days strong" : "days running"}</p>
               </div>
-              <Link to="/events" className="col-span-3 row-span-3 rounded-2xl border border-border bg-card p-5 hover-lift block">
-                <p className="text-xs font-medium uppercase tracking-widest text-muted-foreground">{loggedIn ? "Joined" : "Created"}</p>
-                <p className="mt-3 font-display text-2xl font-bold text-foreground">{loggedIn ? joinedDisplay : totalSessionsCount}{totalSessionsCount > 0 ? ` / ${totalSessionsCount}` : ""}</p>
-                <p className="text-sm text-muted-foreground">{loggedIn ? "sessions joined" : "sessions created"}</p>
+              <Link
+                to="/events"
+                className="col-span-3 row-span-3 rounded-2xl border border-border bg-card p-5 hover-lift block"
+              >
+                <p className="text-xs font-medium uppercase tracking-widest text-muted-foreground">
+                  {loggedIn ? "Joined" : "Created"}
+                </p>
+                <p className="mt-3 font-display text-2xl font-bold text-foreground">
+                  {loggedIn ? joinedDisplay : totalSessionsCount}
+                  {totalSessionsCount > 0 ? ` / ${totalSessionsCount}` : ""}
+                </p>
+                <p className="text-sm text-muted-foreground">
+                  {loggedIn ? "sessions joined" : "sessions created"}
+                </p>
                 <div className="mt-4 flex gap-1.5">
                   {Array.from({ length: Math.max(totalSessionsCount, 1) }).map((_, i) => (
                     <span
@@ -185,7 +259,11 @@ function Index() {
                   <>
                     <p className="mt-3 font-display text-lg font-bold">{latestEvent.title}</p>
                     <p className="mt-1 text-sm opacity-80">
-                      {new Date(latestEvent.scheduledAt).toLocaleTimeString("en-IN", { hour: "2-digit", minute: "2-digit" })} · {latestEvent.durationMin} min
+                      {new Date(latestEvent.scheduledAt).toLocaleTimeString("en-IN", {
+                        hour: "2-digit",
+                        minute: "2-digit",
+                      })}{" "}
+                      · {latestEvent.durationMin} min
                     </p>
                     {latestEvent.mode === "offline" && latestEvent.place && (
                       <p className="mt-1 text-sm opacity-70">{latestEvent.place}</p>
@@ -211,8 +289,12 @@ function Index() {
         <div className="mx-auto grid max-w-7xl grid-cols-2 gap-y-8 px-4 py-10 sm:px-6 md:grid-cols-4 lg:px-8">
           {displayStats.map((s) => (
             <div key={s.label} className="text-center">
-              <p className="font-display text-3xl font-bold text-foreground sm:text-4xl">{s.value}</p>
-              <p className="mt-1 text-xs uppercase tracking-widest text-muted-foreground">{s.label}</p>
+              <p className="font-display text-3xl font-bold text-foreground sm:text-4xl">
+                {s.value}
+              </p>
+              <p className="mt-1 text-xs uppercase tracking-widest text-muted-foreground">
+                {s.label}
+              </p>
             </div>
           ))}
         </div>
@@ -226,7 +308,8 @@ function Index() {
             A calm, structured way to show up every day.
           </h2>
           <p className="mt-4 text-muted-foreground">
-            No flashy gym energy. No overwhelm. Just disciplined daily practice with coaches who care.
+            No flashy gym energy. No overwhelm. Just disciplined daily practice with coaches who
+            care.
           </p>
         </div>
         <div className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
@@ -247,20 +330,27 @@ function Index() {
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="flex flex-wrap items-end justify-between gap-4">
             <div className="max-w-xl">
-              <p className="text-xs font-semibold uppercase tracking-widest text-emerald">Programs</p>
+              <p className="text-xs font-semibold uppercase tracking-widest text-emerald">
+                Programs
+              </p>
               <h2 className="mt-3 font-display text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
                 Find a practice that fits your day.
               </h2>
             </div>
             <Button asChild variant="outline">
-              <Link to="/events">View all events <ArrowRight className="ml-1 h-4 w-4" /></Link>
+              <Link to="/events">
+                View all events <ArrowRight className="ml-1 h-4 w-4" />
+              </Link>
             </Button>
           </div>
           <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
             {programs.slice(0, 6).map((p) => {
               const ProgramIcon = getIcon(p.icon);
               return (
-                <article key={p.slug} className="hover-lift group flex flex-col rounded-xl border border-border bg-card p-6">
+                <article
+                  key={p.slug}
+                  className="hover-lift group flex flex-col rounded-xl border border-border bg-card p-6"
+                >
                   <div className="flex items-center justify-between">
                     <span className="inline-flex items-center gap-2 rounded-full bg-secondary px-2.5 py-1 text-xs font-medium text-foreground">
                       {p.tag}
@@ -270,8 +360,12 @@ function Index() {
                   <div className="mt-6 grid h-12 w-12 place-items-center rounded-lg bg-primary text-primary-foreground">
                     <ProgramIcon className="h-6 w-6" />
                   </div>
-                  <h3 className="mt-5 font-display text-xl font-semibold text-foreground">{p.title}</h3>
-                  <p className="mt-2 flex-1 text-sm leading-relaxed text-muted-foreground">{p.desc}</p>
+                  <h3 className="mt-5 font-display text-xl font-semibold text-foreground">
+                    {p.title}
+                  </h3>
+                  <p className="mt-2 flex-1 text-sm leading-relaxed text-muted-foreground">
+                    {p.desc}
+                  </p>
                   <div className="mt-6 flex items-center justify-between border-t border-border pt-4 text-sm">
                     <span className="text-muted-foreground">{p.level}</span>
                     <span className="inline-flex items-center gap-1 font-medium text-foreground group-hover:text-primary">
@@ -297,7 +391,9 @@ function Index() {
           {testimonials.map((t) => (
             <figure key={t.name} className="hover-lift rounded-xl border border-border bg-card p-6">
               <Quote className="h-5 w-5 text-emerald" />
-              <blockquote className="mt-4 text-sm leading-relaxed text-foreground">"{t.quote}"</blockquote>
+              <blockquote className="mt-4 text-sm leading-relaxed text-foreground">
+                "{t.quote}"
+              </blockquote>
               <figcaption className="mt-6 flex items-center gap-3 border-t border-border pt-4">
                 <div className="grid h-9 w-9 place-items-center rounded-full bg-primary font-display text-sm font-semibold text-primary-foreground">
                   {t.name[0]}
@@ -346,25 +442,38 @@ function Index() {
 
         {quotes.length > 0 && (
           <div className="mt-10 grid gap-5 md:grid-cols-3">
-            {(quotes as { _id: string; userName: string; text: string; createdAt: string }[]).map((q) => (
-              <figure key={q._id} className="rounded-xl border border-border bg-card p-6">
-                <Quote className="h-5 w-5 text-emerald" />
-                <blockquote className="mt-4 text-sm leading-relaxed text-foreground">"{q.text}"</blockquote>
-                <figcaption className="mt-6 flex items-center gap-3 border-t border-border pt-4">
-                  <div className="grid h-9 w-9 place-items-center rounded-full bg-primary font-display text-sm font-semibold text-primary-foreground">
-                    {q.userName[0]}
-                  </div>
-                  <div>
-                    <p className="text-sm font-semibold text-foreground">{q.userName}</p>
-                    <p className="text-xs text-muted-foreground">
-                      {new Date(q.createdAt).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" })}
-                    </p>
-                  </div>
-                </figcaption>
-              </figure>
-            ))}
+            {(quotes as { _id: string; userName: string; text: string; createdAt: string }[]).map(
+              (q) => (
+                <figure key={q._id} className="rounded-xl border border-border bg-card p-6">
+                  <Quote className="h-5 w-5 text-emerald" />
+                  <blockquote className="mt-4 text-sm leading-relaxed text-foreground">
+                    "{q.text}"
+                  </blockquote>
+                  <figcaption className="mt-6 flex items-center gap-3 border-t border-border pt-4">
+                    <div className="grid h-9 w-9 place-items-center rounded-full bg-primary font-display text-sm font-semibold text-primary-foreground">
+                      {q.userName[0]}
+                    </div>
+                    <div>
+                      <p className="text-sm font-semibold text-foreground">{q.userName}</p>
+                      <p className="text-xs text-muted-foreground">
+                        {new Date(q.createdAt).toLocaleDateString("en-IN", {
+                          day: "numeric",
+                          month: "short",
+                          year: "numeric",
+                        })}
+                      </p>
+                    </div>
+                  </figcaption>
+                </figure>
+              ),
+            )}
           </div>
         )}
+      </section>
+
+      {/* FAQ */}
+      <section className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <FAQSection title="Got questions? We have answers." items={homeFAQs} jsonLdId="faq-home" />
       </section>
 
       {/* CTA */}
@@ -380,13 +489,26 @@ function Index() {
               </p>
             </div>
             <ul className="grid gap-3 text-sm sm:grid-cols-2">
-              {["Daily live sessions","Full program library","Habit tracker","No card required"].map((i) => (
-                <li key={i} className="flex items-center gap-2"><Check className="h-4 w-4 text-emerald" /> {i}</li>
+              {[
+                "Daily live sessions",
+                "Full program library",
+                "Habit tracker",
+                "No card required",
+              ].map((i) => (
+                <li key={i} className="flex items-center gap-2">
+                  <Check className="h-4 w-4 text-emerald" /> {i}
+                </li>
               ))}
             </ul>
             <div className="lg:col-span-2">
-              <Button asChild size="lg" className="bg-orange text-orange-foreground hover:bg-orange/90">
-                <Link to="/signup">Get started <ArrowRight className="ml-1 h-4 w-4" /></Link>
+              <Button
+                asChild
+                size="lg"
+                className="bg-orange text-orange-foreground hover:bg-orange/90"
+              >
+                <Link to="/signup">
+                  Get started <ArrowRight className="ml-1 h-4 w-4" />
+                </Link>
               </Button>
             </div>
           </div>
