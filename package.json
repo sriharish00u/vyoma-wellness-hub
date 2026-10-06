@@ -2,6 +2,7 @@
   "name": "mivora-academy",
   "private": true,
   "scripts": {
+    "build": "cd frontend && npm install && npm run build",
     "dev": "concurrently -n backend,frontend -c blue,green \"cd backend && npm run dev\" \"cd frontend && npm run dev\"",
     "backend": "cd backend && npm run dev",
     "frontend": "cd frontend && npm run dev",
