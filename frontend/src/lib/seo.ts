@@ -82,13 +82,14 @@ export function getOrganizationSchema() {
     "@type": "Organization",
     name: SITE_NAME,
     url: SITE_URL,
-    logo: `${SITE_URL}/favicon.svg`,
+    logo: `${SITE_URL}/logo.png`,
+    image: `${SITE_URL}/logo.png`,
     description: SITE_DESCRIPTION,
     foundingDate: "2022",
     sameAs: Object.values(SOCIAL_LINKS),
     contactPoint: {
       "@type": "ContactPoint",
-      email: "mivoraacedamy@gmail.com",
+      email: "mivoraacademy@gmail.com",
       contactType: "customer service",
     },
     address: {

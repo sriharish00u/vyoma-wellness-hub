@@ -40,10 +40,8 @@ function AdminLayout() {
     <div className="flex min-h-screen bg-background">
       <aside className="hidden w-56 flex-col border-r border-border bg-card md:flex">
         <div className="flex h-16 items-center gap-2.5 border-b border-border px-5">
-          <div className="grid h-8 w-8 place-items-center rounded-md bg-primary text-primary-foreground">
-            <ShieldCheck className="h-4 w-4" />
-          </div>
-          <span className="font-display text-sm font-bold tracking-tight text-foreground">Admin</span>
+          <img src="/logo.png" alt="Mivora Academy" className="h-8 w-8 rounded-lg object-cover border border-border" />
+          <span className="font-display text-sm font-bold tracking-tight text-foreground">Mivora Admin</span>
         </div>
 
         <nav className="flex flex-1 flex-col gap-1 px-3 py-4">
@@ -93,9 +91,7 @@ function AdminLayout() {
       <div className="flex w-full flex-col md:hidden">
         <header className="flex h-14 items-center justify-between border-b border-border px-4">
           <div className="flex items-center gap-2">
-            <div className="grid h-7 w-7 place-items-center rounded-md bg-primary text-primary-foreground">
-              <ShieldCheck className="h-3.5 w-3.5" />
-            </div>
+            <img src="/logo.png" alt="Mivora Academy" className="h-7 w-7 rounded-md object-cover border border-border" />
             <span className="font-display text-sm font-bold text-foreground">Admin</span>
           </div>
           <Button variant="ghost" size="sm" onClick={handleSignOut} className="gap-1.5 text-muted-foreground">

@@ -267,13 +267,23 @@ export function TrialRegistrationPage() {
           <div>
             {/* Header Hero Branding */}
             <div className="text-center space-y-4 mb-8">
+              <div className="flex justify-center">
+                <div className="relative h-16 w-16 sm:h-20 sm:w-20 rounded-2xl overflow-hidden border-2 border-emerald/40 bg-card p-1 shadow-lg shadow-emerald/10">
+                  <img
+                    src="/logo.png"
+                    alt="Mivora Academy"
+                    className="h-full w-full rounded-xl object-cover"
+                  />
+                </div>
+              </div>
+
               <div className="inline-flex items-center gap-2 rounded-full border border-emerald/30 bg-emerald/10 px-4 py-1.5 text-xs font-semibold tracking-wide text-emerald backdrop-blur-md">
                 <Sparkles className="h-3.5 w-3.5" />
                 <span>100% ONLINE • 14 DAYS FREE PROGRAM</span>
               </div>
 
               <h1 className="font-display text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-foreground">
-                🌿 MIVORA ACADEMY
+                MIVORA ACADEMY
               </h1>
               <p className="font-display text-lg sm:text-xl font-medium text-emerald">
                 14-Day Free Yoga Program
@@ -1111,8 +1121,14 @@ export function TrialRegistrationPage() {
         ) : (
           /* SUCCESS CONFIRMATION STATE */
           <div className="rounded-3xl border border-emerald/40 bg-card/95 p-8 sm:p-12 shadow-2xl backdrop-blur-2xl text-center space-y-6 animate-in zoom-in-95 duration-400">
-            <div className="mx-auto grid h-20 w-20 place-items-center rounded-full bg-emerald/15 text-emerald ring-8 ring-emerald/10 shadow-lg">
-              <CheckCircle2 className="h-10 w-10" />
+            <div className="flex justify-center">
+              <div className="relative h-16 w-16 sm:h-20 sm:w-20 rounded-2xl overflow-hidden border-2 border-emerald bg-card p-1 shadow-xl">
+                <img
+                  src="/logo.png"
+                  alt="Mivora Academy"
+                  className="h-full w-full rounded-xl object-cover"
+                />
+              </div>
             </div>
 
             <div className="space-y-2">

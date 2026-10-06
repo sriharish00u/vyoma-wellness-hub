@@ -36,3 +36,6 @@ code.py
 code.md
 prompt.txt
 frontend/android/
+.vercel
+.env*
+.playwright-mcp/

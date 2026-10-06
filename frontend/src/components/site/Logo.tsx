@@ -1,19 +1,30 @@
 import { Link } from "@tanstack/react-router";
 
-export function Logo({ className = "" }: { className?: string }) {
+export function Logo({
+  className = "",
+  showText = true,
+  imageSize = "h-9 w-9",
+}: {
+  className?: string;
+  showText?: boolean;
+  imageSize?: string;
+}) {
   return (
     <Link to="/" className={`group inline-flex items-center gap-2.5 ${className}`} aria-label="Mivora Academy home">
-      <span className="relative grid h-9 w-9 place-items-center rounded-md bg-primary text-primary-foreground">
-        <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round">
-          <path d="M4 4l8 16 8-16" />
-          <path d="M8 4l4 8 4-8" className="opacity-60" />
-        </svg>
-        <span className="absolute -right-0.5 -bottom-0.5 h-1.5 w-1.5 rounded-full bg-orange" />
-      </span>
-      <span className="font-display text-lg font-bold tracking-tight text-foreground">
-        MIVORA<span className="ml-1 text-emerald">·</span>
-        <span className="ml-1 text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">Academy</span>
-      </span>
+      <div className={`relative ${imageSize} shrink-0 overflow-hidden rounded-xl border border-border/80 bg-card p-0.5 shadow-xs transition-transform group-hover:scale-105`}>
+        <img
+          src="/logo.png"
+          alt="Mivora Academy Logo"
+          className="h-full w-full rounded-lg object-cover"
+        />
+        <span className="absolute -right-0.5 -bottom-0.5 h-2 w-2 rounded-full bg-emerald border-2 border-background" />
+      </div>
+      {showText && (
+        <span className="font-display text-lg font-bold tracking-tight text-foreground">
+          MIVORA<span className="ml-1 text-emerald">·</span>
+          <span className="ml-1 text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">Academy</span>
+        </span>
+      )}
     </Link>
   );
 }

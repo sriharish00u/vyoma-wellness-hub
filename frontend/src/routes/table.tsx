@@ -430,17 +430,24 @@ export function RegistrationsTablePage() {
     <div className="min-h-screen bg-background py-8 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto space-y-8">
       {/* Header Banner */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-border pb-6">
-        <div>
-          <div className="flex items-center gap-2 text-emerald font-semibold text-xs tracking-wider uppercase">
-            <Sparkles className="h-4 w-4" />
-            <span>Mivora Academy Registration Portal</span>
+        <div className="flex items-center gap-4">
+          <img
+            src="/logo.png"
+            alt="Mivora Academy"
+            className="h-14 w-14 rounded-2xl object-cover border border-border shadow-xs shrink-0"
+          />
+          <div>
+            <div className="flex items-center gap-2 text-emerald font-semibold text-xs tracking-wider uppercase">
+              <Sparkles className="h-4 w-4" />
+              <span>Mivora Academy Registration Portal</span>
+            </div>
+            <h1 className="font-display text-2xl sm:text-3xl font-extrabold text-foreground mt-0.5">
+              14-Day Yoga Program Registrations
+            </h1>
+            <p className="text-sm text-muted-foreground mt-0.5">
+              04 Oct – 17 Oct 2026 • 5:15 AM – 6:15 AM Daily • Live Online
+            </p>
           </div>
-          <h1 className="font-display text-2xl sm:text-3xl font-extrabold text-foreground mt-1">
-            🌿 14-Day Yoga Program Registrations
-          </h1>
-          <p className="text-sm text-muted-foreground mt-0.5">
-            04 Oct – 17 Oct 2026 • 5:15 AM – 6:15 AM Daily • Live Online
-          </p>
         </div>
 
         <div className="flex flex-wrap items-center gap-2">
