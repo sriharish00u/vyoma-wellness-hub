@@ -18,8 +18,8 @@ self.addEventListener("push", (event) => {
 
   const options = {
     body: data.body || "New update from Mivora Academy",
-    icon: "/favicon.svg",
-    badge: "/favicon.svg",
+    icon: "/favicon-192x192.png",
+    badge: "/favicon-192x192.png",
     vibrate: [100, 50, 100],
     data: data.url || "/",
     actions: data.actions || [],
