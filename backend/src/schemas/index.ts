@@ -65,3 +65,28 @@ export const eventSchema = z.object({
   coverImage: z.string().optional(),
   order: z.number().int().optional(),
 });
+
+export const trialRegistrationSchema = z.object({
+  fullName: z.string().min(2, "Full Name must be at least 2 characters"),
+  age: z.coerce.number().min(5, "Please enter a valid age (minimum 5)").max(120, "Please enter a valid age"),
+  whatsappNumber: z.string().min(8, "Please enter a valid WhatsApp / Phone number"),
+  email: z.string().email("Please enter a valid email address"),
+  profession: z.string().min(1, "Please select your profession"),
+  professionOther: z.string().optional().default(""),
+  yogaExperience: z.string().min(1, "Please select your yoga experience"),
+  goals: z.array(z.string()).min(1, "Please select at least one goal/benefit"),
+  goalsOther: z.string().optional().default(""),
+  hopesToGain: z.string().optional().default(""),
+  hasPhysicalRestrictions: z.enum(["No", "Yes"], {
+    errorMap: () => ({ message: "Please select if you have physical restrictions" }),
+  }),
+  physicalRestrictionsDetail: z.string().optional().default(""),
+  morningCommitment: z.string().min(1, "Please select your commitment level"),
+  comfortableFollowingGuidance: z.enum(["Yes", "No"], {
+    errorMap: () => ({ message: "Please select if you are comfortable following guidance" }),
+  }),
+  hearAbout: z.string().optional().default(""),
+  hearAboutOther: z.string().optional().default(""),
+  agreeTerms: z.boolean().refine((val) => val === true, "You must agree to the confirmation terms to register"),
+  futureUpdates: z.string().optional().default(""),
+});

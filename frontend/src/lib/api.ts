@@ -111,6 +111,80 @@ export const api = {
     delete: (id: string) =>
       request<{ success: boolean }>(`/events/${id}`, { method: "DELETE" }),
   },
+  trial: {
+    register: (data: TrialRegistrationInput) =>
+      request<{ success: boolean; message: string; id: string }>("/trial", {
+        method: "POST",
+        body: JSON.stringify(data),
+      }),
+    list: (params?: {
+      search?: string;
+      profession?: string;
+      experience?: string;
+      commitment?: string;
+      hasRestrictions?: string;
+      page?: number;
+      limit?: number;
+      all?: boolean;
+    }) => {
+      const sp = new URLSearchParams();
+      if (params?.search) sp.set("search", params.search);
+      if (params?.profession) sp.set("profession", params.profession);
+      if (params?.experience) sp.set("experience", params.experience);
+      if (params?.commitment) sp.set("commitment", params.commitment);
+      if (params?.hasRestrictions) sp.set("hasRestrictions", params.hasRestrictions);
+      if (params?.page) sp.set("page", String(params.page));
+      if (params?.limit) sp.set("limit", String(params.limit));
+      if (params?.all) sp.set("all", "true");
+      return request<{
+        registrations: TrialRegistration[];
+        total: number;
+        page?: number;
+        pages?: number;
+      }>(`/trial?${sp.toString()}`);
+    },
+    stats: () => request<TrialStats>("/trial/stats"),
+    delete: (id: string) =>
+      request<{ success: boolean; message: string }>(`/trial/${id}`, { method: "DELETE" }),
+  },
+};
+
+export type TrialRegistrationInput = {
+  fullName: string;
+  age: number;
+  whatsappNumber: string;
+  email: string;
+  profession: string;
+  professionOther?: string;
+  yogaExperience: string;
+  goals: string[];
+  goalsOther?: string;
+  hopesToGain?: string;
+  hasPhysicalRestrictions: "No" | "Yes";
+  physicalRestrictionsDetail?: string;
+  morningCommitment: string;
+  comfortableFollowingGuidance: "Yes" | "No";
+  hearAbout?: string;
+  hearAboutOther?: string;
+  agreeTerms: boolean;
+  futureUpdates?: string;
+};
+
+export type TrialRegistration = TrialRegistrationInput & {
+  _id: string;
+  createdAt: string;
+  updatedAt: string;
+  status: "registered" | "attended" | "cancelled";
+};
+
+export type TrialStats = {
+  total: number;
+  committed: number;
+  beginners: number;
+  withRestrictions: number;
+  recent: TrialRegistration[];
+  professions: { _id: string; count: number }[];
+  goals: { _id: string; count: number }[];
 };
 
 export type AuthUser = {

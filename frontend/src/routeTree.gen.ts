@@ -9,58 +9,25 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as TechnicalServicesRouteImport } from './routes/technical-services'
-import { Route as SignupRouteImport } from './routes/signup'
-import { Route as PricingRouteImport } from './routes/pricing'
-import { Route as PhysicalWellnessRouteImport } from './routes/physical-wellness'
-import { Route as MentalWellnessRouteImport } from './routes/mental-wellness'
-import { Route as LoginRouteImport } from './routes/login'
-import { Route as EventsRouteImport } from './routes/events'
-import { Route as ContactRouteImport } from './routes/contact'
-import { Route as AboutRouteImport } from './routes/about'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AboutRouteImport } from './routes/about'
+import { Route as ContactRouteImport } from './routes/contact'
+import { Route as EventsRouteImport } from './routes/events'
+import { Route as LoginRouteImport } from './routes/login'
+import { Route as MentalWellnessRouteImport } from './routes/mental-wellness'
+import { Route as PhysicalWellnessRouteImport } from './routes/physical-wellness'
+import { Route as PricingRouteImport } from './routes/pricing'
+import { Route as SignupRouteImport } from './routes/signup'
+import { Route as TableRouteImport } from './routes/table'
+import { Route as TechnicalServicesRouteImport } from './routes/technical-services'
+import { Route as TrialRouteImport } from './routes/trial'
 import { Route as AdminIndexRouteImport } from './routes/admin/index'
-import { Route as AdminUsersRouteImport } from './routes/admin/users'
 import { Route as AdminContactsRouteImport } from './routes/admin/contacts'
+import { Route as AdminUsersRouteImport } from './routes/admin/users'
 
-const TechnicalServicesRoute = TechnicalServicesRouteImport.update({
-  id: '/technical-services',
-  path: '/technical-services',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const SignupRoute = SignupRouteImport.update({
-  id: '/signup',
-  path: '/signup',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const PricingRoute = PricingRouteImport.update({
-  id: '/pricing',
-  path: '/pricing',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const PhysicalWellnessRoute = PhysicalWellnessRouteImport.update({
-  id: '/physical-wellness',
-  path: '/physical-wellness',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const MentalWellnessRoute = MentalWellnessRouteImport.update({
-  id: '/mental-wellness',
-  path: '/mental-wellness',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const LoginRoute = LoginRouteImport.update({
-  id: '/login',
-  path: '/login',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const EventsRoute = EventsRouteImport.update({
-  id: '/events',
-  path: '/events',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ContactRoute = ContactRouteImport.update({
-  id: '/contact',
-  path: '/contact',
+const IndexRoute = IndexRouteImport.update({
+  id: '/',
+  path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AboutRoute = AboutRouteImport.update({
@@ -68,9 +35,54 @@ const AboutRoute = AboutRouteImport.update({
   path: '/about',
   getParentRoute: () => rootRouteImport,
 } as any)
-const IndexRoute = IndexRouteImport.update({
-  id: '/',
-  path: '/',
+const ContactRoute = ContactRouteImport.update({
+  id: '/contact',
+  path: '/contact',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const EventsRoute = EventsRouteImport.update({
+  id: '/events',
+  path: '/events',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LoginRoute = LoginRouteImport.update({
+  id: '/login',
+  path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MentalWellnessRoute = MentalWellnessRouteImport.update({
+  id: '/mental-wellness',
+  path: '/mental-wellness',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PhysicalWellnessRoute = PhysicalWellnessRouteImport.update({
+  id: '/physical-wellness',
+  path: '/physical-wellness',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PricingRoute = PricingRouteImport.update({
+  id: '/pricing',
+  path: '/pricing',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SignupRoute = SignupRouteImport.update({
+  id: '/signup',
+  path: '/signup',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TableRoute = TableRouteImport.update({
+  id: '/table',
+  path: '/table',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TechnicalServicesRoute = TechnicalServicesRouteImport.update({
+  id: '/technical-services',
+  path: '/technical-services',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TrialRoute = TrialRouteImport.update({
+  id: '/trial',
+  path: '/trial',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AdminIndexRoute = AdminIndexRouteImport.update({
@@ -78,14 +90,14 @@ const AdminIndexRoute = AdminIndexRouteImport.update({
   path: '/admin/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AdminUsersRoute = AdminUsersRouteImport.update({
-  id: '/admin/users',
-  path: '/admin/users',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const AdminContactsRoute = AdminContactsRouteImport.update({
   id: '/admin/contacts',
   path: '/admin/contacts',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminUsersRoute = AdminUsersRouteImport.update({
+  id: '/admin/users',
+  path: '/admin/users',
   getParentRoute: () => rootRouteImport,
 } as any)
 
@@ -99,7 +111,9 @@ export interface FileRoutesByFullPath {
   '/physical-wellness': typeof PhysicalWellnessRoute
   '/pricing': typeof PricingRoute
   '/signup': typeof SignupRoute
+  '/table': typeof TableRoute
   '/technical-services': typeof TechnicalServicesRoute
+  '/trial': typeof TrialRoute
   '/admin/contacts': typeof AdminContactsRoute
   '/admin/users': typeof AdminUsersRoute
   '/admin/': typeof AdminIndexRoute
@@ -114,7 +128,9 @@ export interface FileRoutesByTo {
   '/physical-wellness': typeof PhysicalWellnessRoute
   '/pricing': typeof PricingRoute
   '/signup': typeof SignupRoute
+  '/table': typeof TableRoute
   '/technical-services': typeof TechnicalServicesRoute
+  '/trial': typeof TrialRoute
   '/admin/contacts': typeof AdminContactsRoute
   '/admin/users': typeof AdminUsersRoute
   '/admin': typeof AdminIndexRoute
@@ -130,7 +146,9 @@ export interface FileRoutesById {
   '/physical-wellness': typeof PhysicalWellnessRoute
   '/pricing': typeof PricingRoute
   '/signup': typeof SignupRoute
+  '/table': typeof TableRoute
   '/technical-services': typeof TechnicalServicesRoute
+  '/trial': typeof TrialRoute
   '/admin/contacts': typeof AdminContactsRoute
   '/admin/users': typeof AdminUsersRoute
   '/admin/': typeof AdminIndexRoute
@@ -147,7 +165,9 @@ export interface FileRouteTypes {
     | '/physical-wellness'
     | '/pricing'
     | '/signup'
+    | '/table'
     | '/technical-services'
+    | '/trial'
     | '/admin/contacts'
     | '/admin/users'
     | '/admin/'
@@ -162,7 +182,9 @@ export interface FileRouteTypes {
     | '/physical-wellness'
     | '/pricing'
     | '/signup'
+    | '/table'
     | '/technical-services'
+    | '/trial'
     | '/admin/contacts'
     | '/admin/users'
     | '/admin'
@@ -177,7 +199,9 @@ export interface FileRouteTypes {
     | '/physical-wellness'
     | '/pricing'
     | '/signup'
+    | '/table'
     | '/technical-services'
+    | '/trial'
     | '/admin/contacts'
     | '/admin/users'
     | '/admin/'
@@ -193,7 +217,9 @@ export interface RootRouteChildren {
   PhysicalWellnessRoute: typeof PhysicalWellnessRoute
   PricingRoute: typeof PricingRoute
   SignupRoute: typeof SignupRoute
+  TableRoute: typeof TableRoute
   TechnicalServicesRoute: typeof TechnicalServicesRoute
+  TrialRoute: typeof TrialRoute
   AdminContactsRoute: typeof AdminContactsRoute
   AdminUsersRoute: typeof AdminUsersRoute
   AdminIndexRoute: typeof AdminIndexRoute
@@ -201,60 +227,11 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/technical-services': {
-      id: '/technical-services'
-      path: '/technical-services'
-      fullPath: '/technical-services'
-      preLoaderRoute: typeof TechnicalServicesRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/signup': {
-      id: '/signup'
-      path: '/signup'
-      fullPath: '/signup'
-      preLoaderRoute: typeof SignupRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/pricing': {
-      id: '/pricing'
-      path: '/pricing'
-      fullPath: '/pricing'
-      preLoaderRoute: typeof PricingRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/physical-wellness': {
-      id: '/physical-wellness'
-      path: '/physical-wellness'
-      fullPath: '/physical-wellness'
-      preLoaderRoute: typeof PhysicalWellnessRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/mental-wellness': {
-      id: '/mental-wellness'
-      path: '/mental-wellness'
-      fullPath: '/mental-wellness'
-      preLoaderRoute: typeof MentalWellnessRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/login': {
-      id: '/login'
-      path: '/login'
-      fullPath: '/login'
-      preLoaderRoute: typeof LoginRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/events': {
-      id: '/events'
-      path: '/events'
-      fullPath: '/events'
-      preLoaderRoute: typeof EventsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/contact': {
-      id: '/contact'
-      path: '/contact'
-      fullPath: '/contact'
-      preLoaderRoute: typeof ContactRouteImport
+    '/': {
+      id: '/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/about': {
@@ -264,11 +241,74 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AboutRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/': {
-      id: '/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
+    '/contact': {
+      id: '/contact'
+      path: '/contact'
+      fullPath: '/contact'
+      preLoaderRoute: typeof ContactRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/events': {
+      id: '/events'
+      path: '/events'
+      fullPath: '/events'
+      preLoaderRoute: typeof EventsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/login': {
+      id: '/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/mental-wellness': {
+      id: '/mental-wellness'
+      path: '/mental-wellness'
+      fullPath: '/mental-wellness'
+      preLoaderRoute: typeof MentalWellnessRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/physical-wellness': {
+      id: '/physical-wellness'
+      path: '/physical-wellness'
+      fullPath: '/physical-wellness'
+      preLoaderRoute: typeof PhysicalWellnessRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/pricing': {
+      id: '/pricing'
+      path: '/pricing'
+      fullPath: '/pricing'
+      preLoaderRoute: typeof PricingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/signup': {
+      id: '/signup'
+      path: '/signup'
+      fullPath: '/signup'
+      preLoaderRoute: typeof SignupRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/table': {
+      id: '/table'
+      path: '/table'
+      fullPath: '/table'
+      preLoaderRoute: typeof TableRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/technical-services': {
+      id: '/technical-services'
+      path: '/technical-services'
+      fullPath: '/technical-services'
+      preLoaderRoute: typeof TechnicalServicesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/trial': {
+      id: '/trial'
+      path: '/trial'
+      fullPath: '/trial'
+      preLoaderRoute: typeof TrialRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/admin/': {
@@ -278,18 +318,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/admin/users': {
-      id: '/admin/users'
-      path: '/admin/users'
-      fullPath: '/admin/users'
-      preLoaderRoute: typeof AdminUsersRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/admin/contacts': {
       id: '/admin/contacts'
       path: '/admin/contacts'
       fullPath: '/admin/contacts'
       preLoaderRoute: typeof AdminContactsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin/users': {
+      id: '/admin/users'
+      path: '/admin/users'
+      fullPath: '/admin/users'
+      preLoaderRoute: typeof AdminUsersRouteImport
       parentRoute: typeof rootRouteImport
     }
   }
@@ -305,7 +345,9 @@ const rootRouteChildren: RootRouteChildren = {
   PhysicalWellnessRoute: PhysicalWellnessRoute,
   PricingRoute: PricingRoute,
   SignupRoute: SignupRoute,
+  TableRoute: TableRoute,
   TechnicalServicesRoute: TechnicalServicesRoute,
+  TrialRoute: TrialRoute,
   AdminContactsRoute: AdminContactsRoute,
   AdminUsersRoute: AdminUsersRoute,
   AdminIndexRoute: AdminIndexRoute,
