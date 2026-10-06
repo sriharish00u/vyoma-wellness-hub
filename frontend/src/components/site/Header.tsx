@@ -23,7 +23,7 @@ export function Header() {
   const loggedIn = auth.isLoggedIn();
   const isAdmin = auth.isAdmin();
 
-  if (path.startsWith("/admin")) return null;
+  if (path.startsWith("/admin") || path === "/trial" || path === "/table") return null;
 
   const handleSignOut = () => {
     auth.clear();

@@ -5,7 +5,7 @@ import { SOCIAL_LINKS } from "@/lib/seo";
 export function Footer() {
   const path = useRouterState({ select: (s) => s.location.pathname });
 
-  if (path.startsWith("/admin")) return null;
+  if (path.startsWith("/admin") || path === "/trial" || path === "/table") return null;
 
   return (
     <footer className="mt-24 border-t border-border bg-secondary/40">
