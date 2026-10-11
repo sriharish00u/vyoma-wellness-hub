@@ -218,7 +218,7 @@ export function RegistrationsTablePage() {
         </style>
       </head>
       <body>
-        <h2>MIVORA ACADEMY — 14-Day Free Yoga Program (04–17 October 2026)</h2>
+        <h2>MIVORA ACADEMY — 14-Day Free Yoga Program (17–30 October 2026)</h2>
         <p>Generated: ${new Date().toLocaleString("en-IN")} | Total Records: ${filteredList.length}</p>
         <table>
           <thead>
@@ -324,7 +324,7 @@ export function RegistrationsTablePage() {
         <div class="header">
           <div>
             <div class="brand">🌿 MIVORA ACADEMY</div>
-            <div class="sub">14-Day Free Yoga Program • 04 Oct – 17 Oct 2026 (5:15 AM – 6:15 AM)</div>
+            <div class="sub">14-Day Free Yoga Program • 17 Oct – 30 Oct 2026 (5:15 AM – 6:15 AM)</div>
           </div>
           <div class="meta">
             <div><strong>Report:</strong> Official Participant Roster</div>
@@ -421,7 +421,7 @@ export function RegistrationsTablePage() {
     const cleanPhone = phone.replace(/[^0-9]/g, "");
     const finalPhone = cleanPhone.length === 10 ? `91${cleanPhone}` : cleanPhone;
     const msg = encodeURIComponent(
-      `Namaste ${name}! 🌿 Welcome to Mivora Academy 14-Day Free Yoga Program (04–17 October 2026, 5:15 AM – 6:15 AM). Here is your session access details:`
+      `Namaste ${name}! 🌿 Welcome to Mivora Academy 14-Day Free Yoga Program (17–30 October 2026, 5:15 AM – 6:15 AM). Here is your session access details:`
     );
     window.open(`https://wa.me/${finalPhone}?text=${msg}`, "_blank");
   };
@@ -445,7 +445,7 @@ export function RegistrationsTablePage() {
               14-Day Yoga Program Registrations
             </h1>
             <p className="text-sm text-muted-foreground mt-0.5">
-              04 Oct – 17 Oct 2026 • 5:15 AM – 6:15 AM Daily • Live Online
+              17 Oct – 30 Oct 2026 • 5:15 AM – 6:15 AM Daily • Live Online
             </p>
           </div>
         </div>
