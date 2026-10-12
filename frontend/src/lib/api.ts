@@ -1,4 +1,15 @@
-const BASE = import.meta.env.VITE_API_URL ?? "http://localhost:3001/api";
+function resolveApiUrl(): string {
+  const envUrl = import.meta.env.VITE_API_URL?.trim();
+  if (envUrl) {
+    const cleaned = envUrl.replace(/\/+$/, "");
+    return cleaned.endsWith("/api") ? cleaned : `${cleaned}/api`;
+  }
+  return import.meta.env.PROD
+    ? "https://vyoma-wellness-hub.onrender.com/api"
+    : "http://localhost:3001/api";
+}
+
+const BASE = resolveApiUrl();
 
 function getToken() {
   return localStorage.getItem("mivora_token");

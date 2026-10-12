@@ -1,4 +1,15 @@
-const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3001/api";
+function resolveApiUrl(): string {
+  const envUrl = import.meta.env.VITE_API_URL?.trim();
+  if (envUrl) {
+    const cleaned = envUrl.replace(/\/+$/, "");
+    return cleaned.endsWith("/api") ? cleaned : `${cleaned}/api`;
+  }
+  return import.meta.env.PROD
+    ? "https://vyoma-wellness-hub.onrender.com/api"
+    : "http://localhost:3001/api";
+}
+
+const API_URL = resolveApiUrl();
 
 function urlBase64ToUint8Array(base64String: string) {
   const padding = "=".repeat((4 - (base64String.length % 4)) % 4);
@@ -55,7 +66,7 @@ export const pushManager = {
   },
 
   async sendSubscriptionToServer(subscription: PushSubscription): Promise<boolean> {
-    const token = localStorage.getItem("token");
+    const token = localStorage.getItem("mivora_token") || localStorage.getItem("token");
     if (!token) return false;
 
     try {
@@ -80,7 +91,7 @@ export const pushManager = {
     const subscription = await registration.pushManager.getSubscription();
     if (!subscription) return true;
 
-    const token = localStorage.getItem("token");
+    const token = localStorage.getItem("mivora_token") || localStorage.getItem("token");
     if (token) {
       try {
         await fetch(`${API_URL}/push/unsubscribe`, {

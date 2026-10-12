@@ -16,18 +16,51 @@ import trialRoutes from "./routes/trial.js";
 
 const app = express();
 const PORT = process.env.PORT ?? 3001;
-const CLIENT_ORIGINS = (
-  process.env.CLIENT_ORIGIN ??
-  "http://localhost:5173,https://localhost,capacitor://localhost,https://mivora-academy.vercel.app"
-).split(",");
 
-const corsOptions = {
-  origin: function (origin: string | undefined, callback: any) {
-    if (!origin || CLIENT_ORIGINS.includes(origin)) {
+const DEFAULT_ALLOWED_ORIGINS = [
+  "http://localhost:5173",
+  "http://localhost:3000",
+  "http://localhost:4173",
+  "http://127.0.0.1:5173",
+  "http://127.0.0.1:3000",
+  "http://127.0.0.1:4173",
+  "https://localhost",
+  "capacitor://localhost",
+  "https://mivora-academy.vercel.app",
+  "https://vyoma-wellness-hub.vercel.app",
+  "https://mivora-acedamy.vercel.app",
+];
+
+const envOrigins = (process.env.CLIENT_ORIGIN ?? "")
+  .split(",")
+  .map((o) => o.trim())
+  .filter(Boolean);
+
+const allowedOrigins = new Set([...DEFAULT_ALLOWED_ORIGINS, ...envOrigins]);
+
+function isAllowedOrigin(origin: string): boolean {
+  if (allowedOrigins.has(origin)) return true;
+  // Match any Vercel domain for Mivora / Vyoma or team preview deployments
+  if (/^https:\/\/(vyoma-wellness-hub|mivora-academy|mivora-acedamy)[a-z0-9-]*\.vercel\.app$/i.test(origin)) {
+    return true;
+  }
+  if (/^https:\/\/[a-z0-9-]+-jay-harish-ps-projects\.vercel\.app$/i.test(origin)) {
+    return true;
+  }
+  // Match localhost / 127.0.0.1 on any port
+  if (/^http:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/i.test(origin)) {
+    return true;
+  }
+  return false;
+}
+
+const corsOptions: cors.CorsOptions = {
+  origin: function (origin: string | undefined, callback: (err: Error | null, allow?: boolean) => void) {
+    if (!origin || isAllowedOrigin(origin)) {
       callback(null, true);
     } else {
-      console.log("Blocked by CORS:", origin);
-      callback(new Error("Not allowed by CORS"));
+      console.warn("[CORS Blocked] Origin:", origin);
+      callback(null, false);
     }
   },
   credentials: true,
