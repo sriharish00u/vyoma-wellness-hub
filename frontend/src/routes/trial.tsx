@@ -40,7 +40,7 @@ export const Route = createFileRoute("/trial")({
       {
         name: "description",
         content:
-          "Register for Mivora Academy's 14-Day Free Online Yoga Program (17–30 October 2026, 5:15 AM – 6:15 AM). Breathe. Move. Begin.",
+          "Register for Mivora Academy's 14-Day Free Online Yoga Program (19 October – 1 November 2026, 5:15 AM – 6:15 AM). Breathe. Move. Begin.",
       },
     ],
   }),
@@ -244,14 +244,14 @@ export function TrialRegistrationPage() {
       "Daily Morning Yoga (5:15 AM – 6:15 AM). Breathe. Move. Begin.\nOnline Link & WhatsApp updates: 9043380133"
     );
     const location = encodeURIComponent("Online (Zoom / Meet)");
-    // 17 October 2026 05:15 IST (UTC: 20261016T234500Z) to 20261017T004500Z
-    const googleCalendarUrl = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${title}&details=${details}&location=${location}&dates=20261017T051500/20261017T061500&recur=RRULE:FREQ=DAILY;COUNT=14`;
+    // 19 October 2026 05:15 IST (UTC: 20261018T234500Z) to 20261019T004500Z
+    const googleCalendarUrl = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${title}&details=${details}&location=${location}&dates=20261019T051500/20261019T061500&recur=RRULE:FREQ=DAILY;COUNT=14`;
     window.open(googleCalendarUrl, "_blank");
   };
 
   const handleShareWhatsApp = () => {
     const text = encodeURIComponent(
-      "🌿 Join me for the MIVORA ACADEMY 14-Day Free Online Yoga Program! (17–30 October 2026, 5:15 AM – 6:15 AM). Register here: " +
+      "🌿 Join me for the MIVORA ACADEMY 14-Day Free Online Yoga Program! (19 October – 1 November 2026, 5:15 AM – 6:15 AM). Register here: " +
         window.location.href
     );
     window.open(`https://wa.me/?text=${text}`, "_blank");
@@ -296,7 +296,7 @@ export function TrialRegistrationPage() {
               <div className="flex flex-wrap items-center justify-center gap-3 pt-2">
                 <div className="flex items-center gap-1.5 rounded-lg border border-border bg-card/80 px-3 py-1.5 text-xs font-medium text-foreground shadow-xs backdrop-blur-md">
                   <Calendar className="h-3.5 w-3.5 text-primary" />
-                  <span>17 Oct – 30 Oct 2026</span>
+                  <span>19 Oct – 1 Nov 2026</span>
                 </div>
                 <div className="flex items-center gap-1.5 rounded-lg border border-border bg-card/80 px-3 py-1.5 text-xs font-medium text-foreground shadow-xs backdrop-blur-md">
                   <Clock className="h-3.5 w-3.5 text-orange" />
@@ -1034,7 +1034,7 @@ export function TrialRegistrationPage() {
                       <Badge className="bg-emerald text-emerald-foreground">FREE</Badge>
                     </div>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs text-foreground/90">
-                      <div>📅 <strong>Dates:</strong> 17 October – 30 October 2026</div>
+                      <div>📅 <strong>Dates:</strong> 19 October – 1 November 2026</div>
                       <div>⏰ <strong>Time:</strong> 5:15 AM – 6:15 AM (IST)</div>
                       <div>🌐 <strong>Format:</strong> 100% Online</div>
                       <div>👤 <strong>Registered for:</strong> {formData.fullName || "Participant"}</div>
@@ -1145,7 +1145,7 @@ export function TrialRegistrationPage() {
             <div className="max-w-md mx-auto rounded-2xl border border-border bg-secondary/50 p-5 text-sm space-y-3 text-left">
               <div className="flex items-center gap-2 text-foreground font-semibold">
                 <Calendar className="h-4 w-4 text-emerald" />
-                <span>17 October – 30 October 2026</span>
+                <span>19 October – 1 November 2026</span>
               </div>
               <div className="flex items-center gap-2 text-foreground font-semibold">
                 <Clock className="h-4 w-4 text-orange" />
